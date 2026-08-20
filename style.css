@@ -1,62 +1,84 @@
 :root {
-  --font-rune: 'Cinzel', serif;
   --font-pixel: 'Press Start 2P', monospace;
-  --font-ui: 'Plus Jakarta Sans', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* SFL Classic UI Palette */
+  --sfl-board: #c28d5d;
+  --sfl-border-dark: #4b2813;
+  --sfl-border-light: #e4ad7e;
+  --sfl-card-bg: #edd3a8;
+  --sfl-card-active: #ffea9f;
+  --sfl-card-locked: #a39587;
 }
 
 body {
-  font-family: var(--font-ui);
-  background-color: #05070d;
+  font-family: var(--font-body);
+  background-color: #63ab3f; /* SFL Grass Green */
   background-image: 
-    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, #0c1220 0px, #05070d 100%);
-  color: #e2e8f0;
-  min-height: 100vh;
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 2px, transparent 0);
+  background-size: 24px 24px;
+  color: #3e2723;
+  image-rendering: pixelated;
 }
 
-.font-rune { font-family: var(--font-rune); }
-.font-pixel { font-family: var(--font-pixel); }
-
-/* Scrollbars */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #090e1a; }
-::-webkit-scrollbar-thumb { background: #22324e; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #d97706; }
-
-/* Panels */
-.glass-panel {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(8, 13, 26, 0.88) 100%);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(254, 240, 138, 0.15);
+.font-pixel {
+  font-family: var(--font-pixel);
 }
 
-/* Skill Cards */
-.card-unlocked {
-  background: linear-gradient(180deg, rgba(180, 83, 9, 0.25) 0%, rgba(69, 26, 3, 0.4) 100%);
-  border: 1px solid #f59e0b;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.25), inset 0 0 12px rgba(245, 158, 11, 0.15);
+/* SFL 9-Slice Style Retro Wood Boxes */
+.sfl-box {
+  background-color: var(--sfl-board);
+  border: 4px solid var(--sfl-border-dark);
+  box-shadow: inset -4px -4px 0px 0px #8b5a2b, inset 4px 4px 0px 0px var(--sfl-border-light), 0 6px 0px rgba(0,0,0,0.25);
 }
 
-.card-available {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+.sfl-inner-box {
+  background-color: #f7e6c4;
+  border: 3px solid #7c4822;
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
 }
 
-.card-available:hover {
-  border-color: #38bdf8;
+/* Compact Skill Cards */
+.sfl-card {
+  background-color: var(--sfl-card-bg);
+  border: 3px solid #8d5524;
+  box-shadow: inset -2px -2px 0px #c49a6c, inset 2px 2px 0px #fff4dc;
+  transition: transform 0.05s ease, background-color 0.1s ease;
+}
+
+.sfl-card:hover:not(.locked) {
   transform: translateY(-2px);
-  box-shadow: 0 0 22px rgba(56, 189, 248, 0.35);
+  filter: brightness(1.03);
 }
 
-.card-locked {
-  background: rgba(10, 15, 26, 0.5);
-  border: 1px dashed rgba(71, 85, 105, 0.4);
-  opacity: 0.5;
+.sfl-card.active {
+  background-color: var(--sfl-card-active);
+  border-color: #b8860b;
+  box-shadow: inset -2px -2px 0px #d4a017, inset 2px 2px 0px #ffffff;
 }
 
-.tier-badge {
-  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+.sfl-card.locked {
+  background-color: var(--sfl-card-locked);
+  border-color: #5c5248;
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Retro Pixel Button */
+.sfl-btn {
+  background-color: #e09f3e;
+  border: 3px solid #542b0d;
+  box-shadow: inset -2px -2px 0px #9e6417, inset 2px 2px 0px #ffd285, 0 3px 0 #3a1c06;
+}
+
+.sfl-btn:active {
+  transform: translateY(3px);
+  box-shadow: inset -2px -2px 0px #9e6417, inset 2px 2px 0px #ffd285;
+}
+
+.sfl-btn-danger {
+  background-color: #d9534f;
+  border-color: #501311;
+  box-shadow: inset -2px -2px 0px #8b2320, inset 2px 2px 0px #f39b98, 0 3px 0 #3a0d0c;
 }
