@@ -74,7 +74,7 @@ function renderTabs() {
     const isActive = key === currentCategoryKey;
     const catPts = getCategoryPoints(key).total;
     return `
-      <button onclick="setCategory('${key}')" class="px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-2 ${
+      <button type="button" onclick="setCategory('${key}')" class="px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-2 cursor-pointer ${
         isActive
           ? 'bg-amber-400/10 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
           : 'card-glass border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
@@ -207,5 +207,77 @@ function loadBuildFromURL() {
   }
 }
 
+// --- Suggestions Modal Logic ---
+function openSuggestionsModal() {
+  const modal = document.getElementById("suggestions-modal");
+  const listContainer = document.getElementById("suggestions-list");
+  const categoryTitle = document.getElementById("modal-category-title");
+  
+  const currentCat = SKILL_DATABASE[currentCategoryKey];
+  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[currentCategoryKey]) || [];
+
+  categoryTitle.innerText = `${currentCat.name} — Recommended Builds`;
+
+  if (suggestions.length === 0) {
+    listContainer.innerHTML = `
+      <div class="p-6 rounded-xl bg-slate-900/40 border border-slate-800 text-center text-xs text-slate-500 italic">
+        No community presets added for ${currentCat.name} yet.
+      </div>
+    `;
+  } else {
+    listContainer.innerHTML = suggestions.map(preset => {
+      const skillPills = preset.skills.map(id => {
+        const found = currentCat.skills.find(s => s.id === id);
+        return found ? `<span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[11px]">${found.icon} ${found.name}</span>` : '';
+      }).join(' ');
+
+      return `
+        <div class="p-4 rounded-xl card-sub border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col gap-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-display font-bold text-xs text-white">${preset.title}</h4>
+              <span class="px-2 py-0.5 rounded text-[9px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
+            </div>
+            <button type="button" onclick="applyPreset('${preset.id}')" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-display font-bold text-xs transition-all active:scale-95 cursor-pointer">
+              Apply Build
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">${preset.description}</p>
+          <div class="flex flex-wrap gap-1.5 pt-1 border-t border-slate-800/60">
+            ${skillPills}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  modal.style.display = "flex";
+}
+
+function closeSuggestionsModal() {
+  document.getElementById("suggestions-modal").style.display = "none";
+}
+
+function onModalBackdropClick(event) {
+  if (event.target.id === "suggestions-modal") {
+    closeSuggestionsModal();
+  }
+}
+
+function applyPreset(presetId) {
+  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[currentCategoryKey]) || [];
+  const preset = suggestions.find(p => p.id === presetId);
+  if (!preset) return;
+
+  const currentCat = SKILL_DATABASE[currentCategoryKey];
+  currentCat.skills.forEach(s => activeSkills.delete(s.id));
+  preset.skills.forEach(skillId => activeSkills.add(skillId));
+
+  validateTierRequirements(currentCategoryKey);
+  closeSuggestionsModal();
+  render();
+}
+
+// Initial Boot
 loadBuildFromURL();
 render();
