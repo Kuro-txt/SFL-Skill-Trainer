@@ -2,6 +2,15 @@ let currentCategoryKey = "crops";
 // Stores skill ranks: { skillId: rank } (1 to 3). Missing/0 means unlearned.
 let skillRanks = {};
 
+// Build a dynamic lookup map: normalized skill name -> skill ID
+const SKILL_NAME_LOOKUP = {};
+Object.values(SKILL_DATABASE).forEach(cat => {
+  cat.skills.forEach(skill => {
+    const normalized = skill.name.trim().toLowerCase();
+    SKILL_NAME_LOOKUP[normalized] = skill.id;
+  });
+});
+
 // Cost calculation per tier & target rank
 function getRankCost(tier, targetRank) {
   if (targetRank === 1) {
@@ -61,6 +70,67 @@ function getTotalGlobalInvestments() {
   return { points, shards };
 }
 
+// --- Farm API Fetcher ---
+async function fetchFarmSkills(event) {
+  if (event) event.preventDefault();
+
+  const input = document.getElementById("farm-id-input");
+  const farmId = input.value.trim();
+  const fetchBtn = document.getElementById("fetch-btn");
+
+  if (!farmId) return;
+
+  const originalBtnText = fetchBtn.innerHTML;
+  fetchBtn.disabled = true;
+  fetchBtn.innerHTML = `<span>⏳</span> Syncing...`;
+
+  try {
+    const res = await fetch(`/api/farm?id=${encodeURIComponent(farmId)}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to load farm.");
+    }
+
+    // Extract skills object from response
+    const rawSkills = data?.farm?.bumpkin?.skills || data?.bumpkin?.skills || {};
+    const skillEntries = Object.entries(rawSkills);
+
+    if (skillEntries.length === 0) {
+      showToast(`Farm #${farmId} has no skills allocated.`, "neutral");
+    } else {
+      // Clear current build and map newly fetched skills
+      skillRanks = {};
+      let matchedCount = 0;
+
+      skillEntries.forEach(([skillName, rankValue]) => {
+        const normalized = skillName.trim().toLowerCase();
+        const skillId = SKILL_NAME_LOOKUP[normalized];
+
+        if (skillId) {
+          // Normalize rank value (can be 1, 2, or 3)
+          const rank = Math.min(3, Math.max(1, Number(rankValue) || 1));
+          skillRanks[skillId] = rank;
+          matchedCount++;
+        }
+      });
+
+      // Validate tier locks across all branches
+      Object.keys(SKILL_DATABASE).forEach(validateTierRequirements);
+
+      const totals = getTotalGlobalInvestments();
+      showToast(`Synced Farm #${farmId}: ${matchedCount} skills (${totals.points} pts, ${totals.shards} shards)`);
+    }
+
+    render();
+  } catch (err) {
+    showToast(err.message || "Failed to sync farm data", "error");
+  } finally {
+    fetchBtn.disabled = false;
+    fetchBtn.innerHTML = originalBtnText;
+  }
+}
+
 // Clicking the card toggles between Rank 1 and unselected
 function toggleSkillCard(skillId) {
   const cat = SKILL_DATABASE[currentCategoryKey];
@@ -70,15 +140,12 @@ function toggleSkillCard(skillId) {
   const currentRank = skillRanks[skillId] || 0;
 
   if (currentRank > 0) {
-    // Unselect completely
     delete skillRanks[skillId];
     validateTierRequirements(currentCategoryKey);
   } else {
-    // Allocate to Rank 1 if prerequisites are met
     const inv = getCategoryInvestments(currentCategoryKey);
     if (skill.tier === 2 && inv.totalPoints < cat.reqs.t2) return;
     if (skill.tier === 3 && inv.totalPoints < cat.reqs.t3) return;
-
     skillRanks[skillId] = 1;
   }
 
@@ -123,12 +190,10 @@ function validateTierRequirements(catKey) {
   const cat = SKILL_DATABASE[catKey];
   let inv = getCategoryInvestments(catKey);
 
-  // Downgrade Tier 3 if requirement is broken
   if (inv.totalPoints < cat.reqs.t3) {
     cat.skills.filter(s => s.tier === 3).forEach(s => delete skillRanks[s.id]);
   }
   inv = getCategoryInvestments(catKey);
-  // Downgrade Tier 2 if requirement is broken
   if (inv.totalPoints < cat.reqs.t2) {
     cat.skills.filter(s => s.tier === 2).forEach(s => delete skillRanks[s.id]);
   }
@@ -198,14 +263,12 @@ function renderTierGrid(tierNum, elementId) {
     return `
       <div onclick="toggleSkillCard('${skill.id}')" class="${cardClass} p-2.5 rounded-lg flex flex-col justify-between select-none cursor-pointer transition-all">
         <div>
-          <!-- Title & Rank Dots -->
           <div class="flex items-center justify-between gap-1.5 mb-1.5">
             <div class="flex items-center gap-1.5 min-w-0">
               <span class="text-base flex-shrink-0">${skill.icon}</span>
               <span class="text-xs font-bold font-display truncate ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
             </div>
             
-            <!-- 3-Dot Rank Display -->
             <div class="flex items-center gap-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800">
               <div class="rank-dot ${rank >= 1 ? 'active' : ''}"></div>
               <div class="rank-dot ${rank >= 2 ? 'active' : ''}"></div>
@@ -214,14 +277,12 @@ function renderTierGrid(tierNum, elementId) {
             </div>
           </div>
 
-          <!-- Buff Descriptions -->
           <div class="space-y-0.5 text-[11px] mb-2">
             ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-tight">• ${b}</p>`).join('')}
             ${skill.debuffs.map(d => `<p class="text-rose-400 leading-tight">• ${d}</p>`).join('')}
           </div>
         </div>
 
-        <!-- Action Stepper -->
         <div class="flex items-center justify-between pt-1.5 border-t border-slate-800/60 mt-1">
           <span class="text-[9px] font-pixel ${rank === 3 ? 'text-amber-400 font-bold' : 'text-slate-400'}">
             ${isTierUnlocked || isAllocated ? nextCostText : `REQ ${req}P`}
@@ -246,15 +307,12 @@ function renderSummary() {
   const catInv = getCategoryInvestments(currentCategoryKey);
   const globalInv = getTotalGlobalInvestments();
 
-  // Topbar HUD
   document.getElementById('hud-total-points').innerText = `${globalInv.points} pts`;
   document.getElementById('hud-total-shards').innerText = `${globalInv.shards}`;
 
-  // Tab Sidebar Investment
   document.getElementById('tab-summary-points').innerText = catInv.totalPoints;
   document.getElementById('tab-summary-shards').innerText = catInv.totalShards;
 
-  // Status Headers
   document.getElementById('tier-1-status').innerText = `${catInv.t1} PTS`;
 
   const t2Unlocked = catInv.totalPoints >= cat.reqs.t2;
@@ -269,7 +327,6 @@ function renderSummary() {
   document.getElementById('summary-t2').innerText = `${catInv.t2}p`;
   document.getElementById('summary-t3').innerText = `${catInv.t3}p`;
 
-  // Filter buffs & debuffs strictly to current active tab
   let buffs = [];
   let debuffs = [];
 
@@ -316,11 +373,19 @@ function render() {
   renderSummary();
 }
 
-function showToast(message) {
+function showToast(message, type = "success") {
   const toast = document.getElementById("toast-notification");
   document.getElementById("toast-text").innerText = message;
-  toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-xl text-xs font-semibold toast-active";
-  setTimeout(() => { toast.classList.remove("toast-active"); }, 2000);
+  
+  if (type === "error") {
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-rose-500/40 text-rose-300 shadow-xl text-xs font-semibold toast-active";
+  } else if (type === "neutral") {
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-600 text-slate-300 shadow-xl text-xs font-semibold toast-active";
+  } else {
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-xl text-xs font-semibold toast-active";
+  }
+
+  setTimeout(() => { toast.classList.remove("toast-active"); }, 2400);
 }
 
 function exportBuildLink() {
