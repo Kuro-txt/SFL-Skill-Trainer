@@ -86,7 +86,6 @@ function renderActiveView() {
     progressContainer.classList.add('hidden');
   }
 
-  // Render Compact Skill Rows for Active Tier
   const tierSkills = cat.skills.filter(s => s.tier === tierNum);
   skillsContainer.innerHTML = tierSkills.map(skill => {
     const rank = skillRanks[skill.id] || 0;
@@ -105,15 +104,12 @@ function renderActiveView() {
 
     return `
       <div onclick="toggleSkillCard('${skill.id}')" class="${rowClass} p-2 rounded-xl flex items-center justify-between gap-2 select-none cursor-pointer transition-all">
-        
-        <!-- Left: Icon + Name + 1-Line Description -->
         <div class="flex items-center gap-2 min-w-0 flex-grow">
           <span class="text-base flex-shrink-0">${skill.icon}</span>
           <div class="min-w-0 flex-grow">
             <div class="flex items-center gap-1.5">
               <span class="text-xs font-bold font-display truncate ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
               
-              <!-- 3-Dot Rank Badge -->
               <div class="flex items-center gap-0.5 bg-slate-900/90 px-1 py-0.5 rounded border border-slate-800 flex-shrink-0">
                 <div class="rank-dot ${rank >= 1 ? 'active' : ''}"></div>
                 <div class="rank-dot ${rank >= 2 ? 'active' : ''}"></div>
@@ -127,7 +123,6 @@ function renderActiveView() {
           </div>
         </div>
 
-        <!-- Right: Cost & Steppers -->
         <div class="flex items-center gap-1.5 flex-shrink-0" onclick="event.stopPropagation()">
           <span class="text-[8px] font-pixel text-slate-400">${nextCostText}</span>
           <div class="flex items-center gap-0.5">
@@ -139,7 +134,6 @@ function renderActiveView() {
             </button>
           </div>
         </div>
-
       </div>
     `;
   }).join('');
@@ -150,8 +144,11 @@ function renderSummary() {
   const catInv = getCategoryInvestments(currentCategoryKey);
   const globalInv = getTotalGlobalInvestments();
 
-  document.getElementById('dock-points').innerText = `${globalInv.points} pts`;
-  document.getElementById('dock-shards').innerText = `${globalInv.shards}`;
+  // Top Bar Counters
+  const hudPoints = document.getElementById('hud-total-points');
+  const hudShards = document.getElementById('hud-total-shards');
+  if (hudPoints) hudPoints.innerText = `${globalInv.points} pts`;
+  if (hudShards) hudShards.innerText = `${globalInv.shards}`;
 
   document.getElementById('summary-t1').innerText = `${catInv.t1}p`;
   document.getElementById('summary-t2').innerText = `${catInv.t2}p`;
