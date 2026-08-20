@@ -149,21 +149,20 @@ function renderSummary() {
   document.getElementById('summary-t2').innerText = points.t2;
   document.getElementById('summary-t3').innerText = points.t3;
 
+  // Filter buffs & debuffs strictly to current active tab
   let buffs = [];
   let debuffs = [];
 
-  Object.values(SKILL_DATABASE).forEach(c => {
-    c.skills.forEach(s => {
-      if (activeSkills.has(s.id)) {
-        s.buffs.forEach(b => buffs.push({ text: b, icon: s.icon }));
-        s.debuffs.forEach(d => debuffs.push({ text: d, icon: s.icon }));
-      }
-    });
+  cat.skills.forEach(s => {
+    if (activeSkills.has(s.id)) {
+      s.buffs.forEach(b => buffs.push({ text: b, icon: s.icon }));
+      s.debuffs.forEach(d => debuffs.push({ text: d, icon: s.icon }));
+    }
   });
 
   const buffsEl = document.getElementById('buffs-list');
   buffsEl.innerHTML = buffs.length === 0 
-    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No buffs</div>`
+    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No ${cat.name} buffs selected</div>`
     : buffs.map(b => `
         <div class="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-1.5">
           <span>${b.icon}</span>
@@ -173,7 +172,7 @@ function renderSummary() {
 
   const debuffsEl = document.getElementById('debuffs-list');
   debuffsEl.innerHTML = debuffs.length === 0
-    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No tradeoffs</div>`
+    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No ${cat.name} tradeoffs</div>`
     : debuffs.map(d => `
         <div class="p-1.5 rounded bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center gap-1.5">
           <span>${d.icon}</span>
@@ -228,7 +227,7 @@ function openSuggestionsModal() {
   document.getElementById("modal-category-title").innerText = `${currentCat.name} Presets`;
 
   if (suggestions.length === 0) {
-    listContainer.innerHTML = `<div class="p-4 rounded-lg card-sub text-center text-xs text-slate-500 italic">No presets added yet.</div>`;
+    listContainer.innerHTML = `<div class="p-4 rounded-lg card-sub text-center text-xs text-slate-500 italic">No presets added for ${currentCat.name} yet.</div>`;
   } else {
     listContainer.innerHTML = suggestions.map(preset => {
       const skillPills = preset.skills.map(id => {
