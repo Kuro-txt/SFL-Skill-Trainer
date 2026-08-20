@@ -3,154 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sunflower Land — Master Skill Matrix</title>
+  <title>Sunflower Land Skill Trainer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="relative flex flex-col justify-between selection:bg-amber-400 selection:text-black">
+<body class="p-3 md:p-6 min-h-screen flex justify-center items-start">
 
-  <canvas id="star-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
-
-  <div class="relative z-10 max-w-[1680px] w-full mx-auto px-4 py-5 flex flex-col gap-5 flex-grow">
+  <!-- Main SFL Game Modal -->
+  <div class="sfl-box rounded-xl max-w-6xl w-full p-4 md:p-6 flex flex-col gap-4">
     
-    <!-- Top HUD Header -->
-    <header class="glass-panel rounded-2xl p-4 lg:p-5 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-[0_0_20px_rgba(245,158,11,0.4)] flex-shrink-0">
-          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-2xl">🌻</div>
-        </div>
+    <!-- Top Header & Points HUD -->
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b-4 border-[#7c4822] pb-3">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🌻</span>
         <div>
-          <h1 class="font-rune text-lg sm:text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">
-            SUNFLOWER LAND
+          <h1 class="font-pixel text-xs sm:text-sm text-yellow-100 drop-shadow-[0_2px_0_#4b2813]">
+            SKILL TREE TRAINER
           </h1>
-          <p class="text-xs text-slate-400 font-medium tracking-wide">Skill Matrix & Build Architect</p>
+          <span class="text-xs font-semibold text-amber-950/80">Sunflower Land Planner</span>
         </div>
       </div>
 
-      <!-- Point Counter & Global Actions -->
-      <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
-        <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 border-amber-500/30">
-          <span class="text-[9px] font-pixel text-amber-400/80 uppercase">Total Spent</span>
-          <span id="hud-total-points" class="font-pixel text-xs text-amber-300">0 pts</span>
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="sfl-inner-box px-3 py-1.5 rounded flex items-center gap-2">
+          <span class="font-pixel text-[9px] text-amber-900">POINTS:</span>
+          <span id="hud-total-points" class="font-pixel text-[10px] text-emerald-800 font-bold">0 PTS</span>
         </div>
 
-        <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-          <span class="text-[9px] font-pixel text-emerald-400/80 uppercase">Category Points</span>
-          <span id="hud-cat-points" class="font-pixel text-xs text-emerald-300">0 pts</span>
-        </div>
-
-        <button onclick="resetCurrentCategory()" class="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-[10px] font-pixel text-slate-300 transition-all active:scale-95">
+        <button onclick="resetCurrentCategory()" class="sfl-btn px-3 py-1.5 rounded font-pixel text-[9px] text-amber-950">
           RESET TAB
         </button>
 
-        <button onclick="resetAllSkills()" class="px-4 py-2 rounded-xl bg-rose-950/50 hover:bg-rose-900/70 border border-rose-500/50 text-[10px] font-pixel text-rose-300 transition-all active:scale-95 shadow-[0_0_12px_rgba(244,63,94,0.2)]">
+        <button onclick="resetAllSkills()" class="sfl-btn sfl-btn-danger px-3 py-1.5 rounded font-pixel text-[9px] text-white">
           RESET ALL
         </button>
       </div>
-    </header>
+    </div>
 
-    <!-- Category Tabs Navigation -->
-    <nav id="category-tabs" class="flex gap-2 overflow-x-auto pb-2"></nav>
+    <!-- Category Tabs -->
+    <div id="category-tabs" class="flex gap-1.5 overflow-x-auto pb-1"></div>
 
-    <!-- Main Workspace -->
-    <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 items-start">
-      <main class="xl:col-span-3 flex flex-col gap-5">
+    <!-- Workspace: Tiers (Left) & Compact Summary (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+      
+      <!-- Skill Matrix (2 Columns) -->
+      <div class="lg:col-span-2 flex flex-col gap-3">
         
         <!-- Tier 1 -->
-        <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-            <div class="flex items-center gap-3">
-              <span class="tier-badge bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-pixel text-[10px] px-3 py-1">TIER 1</span>
-              <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Apprentice Disciplines</h2>
-            </div>
-            <span id="tier-1-status" class="text-[10px] font-pixel text-emerald-400">UNLOCKED (0/0)</span>
+        <div class="sfl-inner-box p-3 rounded">
+          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
+            <span class="font-pixel text-[10px] text-amber-950">TIER 1 (0 Req)</span>
+            <span id="tier-1-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
           </div>
-          <div id="tier-1-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
+          <div id="tier-1-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
 
         <!-- Tier 2 -->
-        <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-            <div class="flex items-center gap-3">
-              <span class="tier-badge bg-amber-500/20 border border-amber-400 text-amber-300 font-pixel text-[10px] px-3 py-1">TIER 2</span>
-              <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Journeyman Mastery</h2>
-            </div>
-            <span id="tier-2-status" class="text-[10px] font-pixel text-amber-400">LOCKED (0/3)</span>
+        <div class="sfl-inner-box p-3 rounded">
+          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
+            <span id="tier-2-header" class="font-pixel text-[10px] text-amber-950">TIER 2</span>
+            <span id="tier-2-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
           </div>
-          <div id="tier-2-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
+          <div id="tier-2-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
 
         <!-- Tier 3 -->
-        <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-            <div class="flex items-center gap-3">
-              <span class="tier-badge bg-purple-500/20 border border-purple-400 text-purple-300 font-pixel text-[10px] px-3 py-1">TIER 3</span>
-              <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Grandmaster Apex</h2>
-            </div>
-            <span id="tier-3-status" class="text-[10px] font-pixel text-purple-400">LOCKED (0/7)</span>
+        <div class="sfl-inner-box p-3 rounded">
+          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
+            <span id="tier-3-header" class="font-pixel text-[10px] text-amber-950">TIER 3</span>
+            <span id="tier-3-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
           </div>
-          <div id="tier-3-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
-      </main>
+          <div id="tier-3-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
 
-      <!-- Dynamic Sidebar -->
-      <aside class="glass-panel rounded-2xl p-5 flex flex-col gap-6 sticky top-5">
+      </div>
+
+      <!-- Compact Sidebar Summary (1 Column) -->
+      <div class="sfl-inner-box p-3 rounded flex flex-col gap-3">
+        <h2 class="font-pixel text-[10px] text-amber-950 border-b-2 border-amber-900/20 pb-1">
+          ACTIVE STATS
+        </h2>
+
+        <!-- Buffs -->
         <div>
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-            <h2 class="font-rune font-bold text-sm tracking-widest text-amber-300 uppercase">Matrix Summary</h2>
-            <span class="text-xs">✨</span>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 mb-4">
-            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
-              <div class="text-[9px] font-pixel text-slate-400 mb-1">T1 PTS</div>
-              <div id="summary-t1" class="font-pixel text-xs text-emerald-400">0</div>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
-              <div class="text-[9px] font-pixel text-slate-400 mb-1">T2 PTS</div>
-              <div id="summary-t2" class="font-pixel text-xs text-amber-400">0</div>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
-              <div class="text-[9px] font-pixel text-slate-400 mb-1">T3 PTS</div>
-              <div id="summary-t3" class="font-pixel text-xs text-purple-400">0</div>
-            </div>
-          </div>
-
-          <!-- Active Buffs -->
-          <div class="space-y-2 mb-4">
-            <div class="text-[10px] font-pixel text-emerald-400 flex items-center gap-1.5">
-              <span>▲</span> ACTIVE BUFFS
-            </div>
-            <div id="buffs-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
-          </div>
-
-          <!-- Active Debuffs -->
-          <div class="space-y-2">
-            <div class="text-[10px] font-pixel text-rose-400 flex items-center gap-1.5">
-              <span>▼</span> PENALTIES & COSTS
-            </div>
-            <div id="debuffs-list" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
-          </div>
+          <span class="font-pixel text-[8px] text-emerald-800 uppercase block mb-1">Buffs</span>
+          <div id="buffs-list" class="max-h-48 overflow-y-auto space-y-1 pr-1 text-xs"></div>
         </div>
 
-        <div class="pt-4 border-t border-slate-800 space-y-2">
-          <button onclick="exportBuildLink()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-pixel text-[10px] tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-            COPY BUILD LINK
+        <!-- Debuffs -->
+        <div>
+          <span class="font-pixel text-[8px] text-rose-800 uppercase block mb-1">Tradeoffs / Debuffs</span>
+          <div id="debuffs-list" class="max-h-36 overflow-y-auto space-y-1 pr-1 text-xs"></div>
+        </div>
+
+        <!-- Share Build Button -->
+        <div class="pt-2 border-t-2 border-amber-900/20">
+          <button onclick="exportBuildLink()" class="sfl-btn w-full py-2 rounded font-pixel text-[9px] text-amber-950">
+            SHARE BUILD LINK
           </button>
-          <div id="toast-msg" class="text-center text-[9px] font-pixel text-emerald-400 opacity-0 transition-opacity">
-            BUILD COPIED TO CLIPBOARD!
+          <div id="toast-msg" class="text-center font-pixel text-[8px] text-emerald-900 mt-1 opacity-0 transition-opacity">
+            COPIED TO CLIPBOARD!
           </div>
         </div>
-      </aside>
+      </div>
+
     </div>
   </div>
 
-  <!-- Scripts Loaded Sequentially -->
   <script src="skillsData.js"></script>
-  <script src="canvas.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
