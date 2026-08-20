@@ -12,121 +12,113 @@ body {
     radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 40%),
     radial-gradient(at 50% 50%, #0b101b 0px, #06090f 100%);
   color: #e2e8f0;
+  padding-bottom: 72px; /* Space for sticky bottom HUD */
 }
 
 .font-pixel { font-family: var(--font-pixel); }
 .font-display { font-family: var(--font-display); }
 
 /* Minimal Scrollbars */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #d97706; }
 
-/* Panels */
+/* Frosted Panels */
 .card-glass {
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.75) 0%, rgba(9, 14, 26, 0.85) 100%);
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(9, 14, 26, 0.92) 100%);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .card-sub {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Buttons */
+/* Compact Buttons */
 .btn-primary {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   border: 1px solid rgba(254, 240, 138, 0.3);
-  transition: all 0.12s ease;
+  transition: all 0.1s ease;
 }
-.btn-primary:hover { filter: brightness(1.1); }
-.btn-primary:active { transform: scale(0.97); }
+.btn-primary:active { transform: scale(0.96); }
 
 .btn-secondary {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(71, 85, 105, 0.4);
-  transition: all 0.12s ease;
-}
-.btn-secondary:hover {
-  background: rgba(51, 65, 85, 0.8);
-  color: #ffffff;
 }
 
 .btn-danger {
-  background: rgba(225, 29, 72, 0.12);
-  border: 1px solid rgba(225, 29, 72, 0.3);
-  transition: all 0.12s ease;
-}
-.btn-danger:hover {
-  background: rgba(225, 29, 72, 0.22);
-  color: #fecdd3;
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.35);
+  color: #fca5a5;
 }
 
-/* Skill Cards */
+/* Dense 2-Col Mobile Cards */
 .skill-card {
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.12s ease;
 }
 
 .skill-card.available {
-  border-color: rgba(56, 189, 248, 0.25);
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
-.skill-card.available:hover {
-  border-color: #38bdf8;
-  background: rgba(23, 37, 61, 0.6);
+.skill-card.available:active {
+  background: rgba(23, 37, 61, 0.8);
 }
 
 .skill-card.active {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(180, 83, 9, 0.05) 100%);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, rgba(180, 83, 9, 0.06) 100%);
   border-color: #f59e0b;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.12);
 }
 
 .skill-card.locked {
-  background: rgba(10, 14, 23, 0.25);
+  background: rgba(10, 14, 23, 0.3);
   border-color: rgba(255, 255, 255, 0.02);
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Stepper Upgrade Buttons */
+/* Stepper Buttons */
 .btn-step {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.1s ease;
-}
-.btn-step:hover:not(:disabled) {
-  background: #3b82f6;
-  border-color: #60a5fa;
-  color: #ffffff;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 .btn-step:disabled {
-  opacity: 0.3;
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
 /* Rank Dots */
 .rank-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 9999px;
   background-color: #334155;
 }
 .rank-dot.active {
   background-color: #f59e0b;
-  box-shadow: 0 0 6px #f59e0b;
+  box-shadow: 0 0 4px #f59e0b;
 }
 
+/* Slide-Up Bottom Drawer */
+#stats-drawer {
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+#stats-drawer.drawer-open {
+  transform: translateY(0);
+}
+
+/* Toast */
 #toast-notification {
-  transform: translateY(60px);
+  transform: translateY(80px);
   opacity: 0;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 #toast-notification.toast-active {
   transform: translateY(0);
   opacity: 1;
