@@ -6,86 +6,100 @@
 
 body {
   font-family: var(--font-ui);
-  background-color: #06090f;
+  background-color: #080c16;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.05) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 40%),
-    radial-gradient(at 50% 50%, #0b101b 0px, #06090f 100%);
-  color: #e2e8f0;
-  padding-bottom: 72px; /* Space for sticky bottom HUD */
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.06) 0px, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, #0d1424 0px, #080c16 100%);
+  color: #f1f5f9;
+  min-height: 100vh;
 }
 
 .font-pixel { font-family: var(--font-pixel); }
 .font-display { font-family: var(--font-display); }
 
 /* Minimal Scrollbars */
-::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-/* Frosted Panels */
+/* Frosted Glass Panels */
 .card-glass {
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(9, 14, 26, 0.92) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.75) 0%, rgba(11, 17, 30, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
 }
 
 .card-sub {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Compact Buttons */
+/* Polished Buttons */
 .btn-primary {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   border: 1px solid rgba(254, 240, 138, 0.3);
-  transition: all 0.1s ease;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  transition: all 0.15s ease;
 }
-.btn-primary:active { transform: scale(0.96); }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(1px); }
 
 .btn-secondary {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(71, 85, 105, 0.4);
+  transition: all 0.15s ease;
 }
+.btn-secondary:hover { background: rgba(51, 65, 85, 0.8); color: #ffffff; }
 
 .btn-danger {
-  background: rgba(225, 29, 72, 0.15);
+  background: rgba(225, 29, 72, 0.12);
   border: 1px solid rgba(225, 29, 72, 0.35);
   color: #fca5a5;
+  transition: all 0.15s ease;
 }
+.btn-danger:hover { background: rgba(225, 29, 72, 0.25); color: #fecdd3; }
 
-/* Dense 2-Col Mobile Cards */
+/* Skill Interactive Cards */
 .skill-card {
-  background: rgba(15, 23, 42, 0.55);
+  background: linear-gradient(180deg, rgba(19, 28, 48, 0.6) 0%, rgba(13, 19, 34, 0.8) 100%);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.12s ease;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.skill-card.available {
-  border-color: rgba(56, 189, 248, 0.3);
-}
-
-.skill-card.available:active {
-  background: rgba(23, 37, 61, 0.8);
+.skill-card.available:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: linear-gradient(180deg, rgba(28, 44, 73, 0.7) 0%, rgba(16, 25, 45, 0.85) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.12);
 }
 
 .skill-card.active {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, rgba(180, 83, 9, 0.06) 100%);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.14) 0%, rgba(180, 83, 9, 0.05) 100%);
   border-color: #f59e0b;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.15), inset 0 0 8px rgba(245, 158, 11, 0.05);
 }
 
 .skill-card.locked {
-  background: rgba(10, 14, 23, 0.3);
+  background: rgba(10, 14, 23, 0.35);
   border-color: rgba(255, 255, 255, 0.02);
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* Stepper Buttons */
+/* Stepper Upgrade Buttons */
 .btn-step {
   background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.1s ease;
+}
+.btn-step:hover:not(:disabled) {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #ffffff;
 }
 .btn-step:disabled {
   opacity: 0.25;
@@ -94,30 +108,21 @@ body {
 
 /* Rank Dots */
 .rank-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 9999px;
   background-color: #334155;
 }
 .rank-dot.active {
   background-color: #f59e0b;
-  box-shadow: 0 0 4px #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
 }
 
-/* Slide-Up Bottom Drawer */
-#stats-drawer {
-  transform: translateY(100%);
-  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
-}
-#stats-drawer.drawer-open {
-  transform: translateY(0);
-}
-
-/* Toast */
+/* Floating Toast */
 #toast-notification {
-  transform: translateY(80px);
+  transform: translateY(60px);
   opacity: 0;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 #toast-notification.toast-active {
   transform: translateY(0);
