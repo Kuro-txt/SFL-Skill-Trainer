@@ -55,13 +55,13 @@ function validateTierRequirements(catKey) {
 function resetCurrentCategory() {
   const cat = SKILL_DATABASE[currentCategoryKey];
   cat.skills.forEach(s => activeSkills.delete(s.id));
-  showToast(`Reset ${cat.name} skills`, "neutral");
+  showToast(`Reset ${cat.name}`);
   render();
 }
 
 function resetAllSkills() {
   activeSkills.clear();
-  showToast("All skill matrix points reset", "neutral");
+  showToast("All points reset");
   render();
 }
 
@@ -76,14 +76,14 @@ function renderTabs() {
     const isActive = key === currentCategoryKey;
     const catPts = getCategoryPoints(key).total;
     return `
-      <button type="button" onclick="setCategory('${key}')" class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-2 cursor-pointer ${
+      <button type="button" onclick="setCategory('${key}')" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1.5 cursor-pointer ${
         isActive
-          ? 'bg-amber-400/15 border-amber-400 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+          ? 'bg-amber-400/15 border-amber-400 text-amber-300'
           : 'card-sub text-slate-400 hover:text-slate-200 hover:border-slate-700'
       }">
         <span class="text-sm">${cat.icon}</span>
         <span>${cat.name}</span>
-        ${catPts > 0 ? `<span class="px-1.5 py-0.2 rounded-full bg-amber-400/20 text-[9px] font-pixel text-amber-300 font-bold">${catPts}</span>` : ''}
+        ${catPts > 0 ? `<span class="px-1 py-0.1 rounded-full bg-amber-400/20 text-[8px] font-pixel text-amber-300 font-bold">${catPts}</span>` : ''}
       </button>
     `;
   }).join('');
@@ -101,36 +101,27 @@ function renderTierGrid(tierNum, elementId) {
     const isAllocated = activeSkills.has(skill.id);
     let cardClass = isAllocated ? "skill-card active" : (isUnlocked ? "skill-card available" : "skill-card locked");
 
-    let actionLabel = "";
-    if (isAllocated) {
-      actionLabel = `<span class="text-amber-400 font-bold flex items-center gap-1">✓ ALLOCATED</span>`;
-    } else if (isUnlocked) {
-      actionLabel = `<span class="text-sky-400 font-bold">+ LEARN</span>`;
-    } else {
-      actionLabel = `<span class="text-slate-500 font-medium flex items-center gap-1">🔒 REQ ${req} PTS</span>`;
-    }
-
     return `
-      <div onclick="toggleSkill('${skill.id}')" class="${cardClass} p-3.5 rounded-xl cursor-pointer flex flex-col justify-between select-none min-h-[125px]">
+      <div onclick="toggleSkill('${skill.id}')" class="${cardClass} p-2.5 rounded-lg cursor-pointer flex flex-col justify-between select-none">
         <div>
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <div class="flex items-center gap-2 min-w-0">
-              <span class="text-xl flex-shrink-0">${skill.icon}</span>
+          <div class="flex items-center justify-between gap-1.5 mb-1">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="text-base flex-shrink-0">${skill.icon}</span>
               <span class="text-xs font-bold font-display truncate ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
             </div>
-            <span class="px-2 py-0.5 rounded text-[9px] font-pixel flex-shrink-0 ${isAllocated ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400'}">
+            <span class="px-1.5 py-0.2 rounded text-[8px] font-pixel flex-shrink-0 ${isAllocated ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400'}">
               ${skill.cost}P
             </span>
           </div>
 
-          <div class="space-y-1 text-xs">
-            ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-snug font-medium">• ${b}</p>`).join('')}
-            ${skill.debuffs.map(d => `<p class="text-rose-400 leading-snug font-medium">• ${d}</p>`).join('')}
+          <div class="space-y-0.5 text-[11px]">
+            ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-tight">• ${b}</p>`).join('')}
+            ${skill.debuffs.map(d => `<p class="text-rose-400 leading-tight">• ${d}</p>`).join('')}
           </div>
         </div>
 
-        <div class="text-[9px] font-pixel text-right mt-3 border-t border-slate-800/40 pt-1.5">
-          ${actionLabel}
+        <div class="text-[8px] font-pixel text-right mt-1.5 pt-1 border-t border-slate-800/40">
+          ${isAllocated ? '<span class="text-amber-400 font-bold">✓ ACTIVE</span>' : (isUnlocked ? '<span class="text-sky-400">+ LEARN</span>' : `<span class="text-slate-500">🔒 REQ ${req}P</span>`)}
         </div>
       </div>
     `;
@@ -144,25 +135,20 @@ function renderSummary() {
   document.getElementById('hud-total-points').innerText = `${getTotalAllPoints()} pts`;
   document.getElementById('hud-cat-points').innerText = `${points.total} pts`;
 
-  // Status Headers
-  document.getElementById('tier-1-status').innerText = `UNLOCKED (${points.t1} PTS)`;
+  document.getElementById('tier-1-status').innerText = `${points.t1} PTS`;
 
   const t2Unlocked = points.total >= cat.reqs.t2;
-  document.getElementById('tier-2-status').innerText = `${t2Unlocked ? 'UNLOCKED' : 'LOCKED'} (${points.t2}/${cat.reqs.t2} REQ)`;
-  const t2Pct = Math.min(100, Math.round((points.total / cat.reqs.t2) * 100));
-  document.getElementById('tier-2-progress').style.width = `${t2Pct}%`;
+  document.getElementById('tier-2-status').innerText = `${t2Unlocked ? 'UNLOCKED' : 'LOCKED'} (${points.t2}/${cat.reqs.t2})`;
+  document.getElementById('tier-2-progress').style.width = `${Math.min(100, Math.round((points.total / cat.reqs.t2) * 100))}%`;
 
   const t3Unlocked = points.total >= cat.reqs.t3;
-  document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${points.t3}/${cat.reqs.t3} REQ)`;
-  const t3Pct = Math.min(100, Math.round((points.total / cat.reqs.t3) * 100));
-  document.getElementById('tier-3-progress').style.width = `${t3Pct}%`;
+  document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${points.t3}/${cat.reqs.t3})`;
+  document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((points.total / cat.reqs.t3) * 100))}%`;
 
-  // Sidebar counters
   document.getElementById('summary-t1').innerText = points.t1;
   document.getElementById('summary-t2').innerText = points.t2;
   document.getElementById('summary-t3').innerText = points.t3;
 
-  // Active perks compilation
   let buffs = [];
   let debuffs = [];
 
@@ -177,21 +163,21 @@ function renderSummary() {
 
   const buffsEl = document.getElementById('buffs-list');
   buffsEl.innerHTML = buffs.length === 0 
-    ? `<div class="text-xs text-slate-500 italic p-2.5 rounded-lg card-sub">No buffs selected</div>`
+    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No buffs</div>`
     : buffs.map(b => `
-        <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+        <div class="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-1.5">
           <span>${b.icon}</span>
-          <span class="font-medium">${b.text}</span>
+          <span class="truncate">${b.text}</span>
         </div>
       `).join('');
 
   const debuffsEl = document.getElementById('debuffs-list');
   debuffsEl.innerHTML = debuffs.length === 0
-    ? `<div class="text-xs text-slate-500 italic p-2.5 rounded-lg card-sub">No tradeoffs active</div>`
+    ? `<div class="text-[10px] text-slate-500 italic p-1.5 rounded card-sub">No tradeoffs</div>`
     : debuffs.map(d => `
-        <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+        <div class="p-1.5 rounded bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center gap-1.5">
           <span>${d.icon}</span>
-          <span class="font-medium">${d.text}</span>
+          <span class="truncate">${d.text}</span>
         </div>
       `).join('');
 }
@@ -204,20 +190,11 @@ function render() {
   renderSummary();
 }
 
-function showToast(message, type = "success") {
+function showToast(message) {
   const toast = document.getElementById("toast-notification");
-  const toastText = document.getElementById("toast-text");
-  toastText.innerText = message;
-
-  if (type === "neutral") {
-    toast.className = "fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-600 text-slate-200 shadow-[0_10px_25px_rgba(0,0,0,0.8)] text-xs font-semibold toast-active";
-  } else {
-    toast.className = "fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-[0_10px_25px_rgba(0,0,0,0.8)] text-xs font-semibold toast-active";
-  }
-
-  setTimeout(() => {
-    toast.classList.remove("toast-active");
-  }, 2200);
+  document.getElementById("toast-text").innerText = message;
+  toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-xl text-xs font-semibold toast-active";
+  setTimeout(() => { toast.classList.remove("toast-active"); }, 2000);
 }
 
 function exportBuildLink() {
@@ -226,7 +203,7 @@ function exportBuildLink() {
   const url = new URL(window.location.href);
   url.searchParams.set("build", encoded);
   navigator.clipboard.writeText(url.href);
-  showToast("Build link copied to clipboard!");
+  showToast("Link copied!");
 }
 
 function loadBuildFromURL() {
@@ -237,50 +214,41 @@ function loadBuildFromURL() {
       const decoded = JSON.parse(atob(build));
       if (Array.isArray(decoded)) activeSkills = new Set(decoded);
     } catch (e) {
-      console.error("Invalid build parameter", e);
+      console.error(e);
     }
   }
 }
 
-// --- Suggestions Modal Handlers ---
 function openSuggestionsModal() {
   const modal = document.getElementById("suggestions-modal");
   const listContainer = document.getElementById("suggestions-list");
-  const categoryTitle = document.getElementById("modal-category-title");
-  
   const currentCat = SKILL_DATABASE[currentCategoryKey];
   const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[currentCategoryKey]) || [];
 
-  categoryTitle.innerText = `${currentCat.name} — Recommended Builds`;
+  document.getElementById("modal-category-title").innerText = `${currentCat.name} Presets`;
 
   if (suggestions.length === 0) {
-    listContainer.innerHTML = `
-      <div class="p-6 rounded-xl card-sub text-center text-xs text-slate-500 italic">
-        No community presets added for ${currentCat.name} yet.
-      </div>
-    `;
+    listContainer.innerHTML = `<div class="p-4 rounded-lg card-sub text-center text-xs text-slate-500 italic">No presets added yet.</div>`;
   } else {
     listContainer.innerHTML = suggestions.map(preset => {
       const skillPills = preset.skills.map(id => {
         const found = currentCat.skills.find(s => s.id === id);
-        return found ? `<span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700/80 text-slate-300 text-[11px] font-medium">${found.icon} ${found.name}</span>` : '';
+        return found ? `<span class="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">${found.icon} ${found.name}</span>` : '';
       }).join(' ');
 
       return `
-        <div class="p-4 rounded-xl card-sub border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col gap-2.5">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2 flex-wrap">
+        <div class="p-2.5 rounded-lg card-sub border border-slate-800 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5">
               <h4 class="font-display font-bold text-xs text-white">${preset.title}</h4>
-              <span class="px-2 py-0.5 rounded text-[9px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
+              <span class="px-1.5 py-0.2 rounded text-[8px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
             </div>
-            <button type="button" onclick="applyPreset('${preset.id}')" class="btn-primary px-3 py-1.5 rounded-lg text-slate-950 font-display font-bold text-xs cursor-pointer">
-              Apply Build
+            <button type="button" onclick="applyPreset('${preset.id}')" class="btn-primary px-2 py-0.5 rounded text-slate-950 font-display font-bold text-[11px] cursor-pointer">
+              Apply
             </button>
           </div>
-          <p class="text-xs text-slate-400 leading-relaxed">${preset.description}</p>
-          <div class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-800/80">
-            ${skillPills}
-          </div>
+          <p class="text-[11px] text-slate-400">${preset.description}</p>
+          <div class="flex flex-wrap gap-1 pt-1 border-t border-slate-800/60">${skillPills}</div>
         </div>
       `;
     }).join('');
@@ -308,10 +276,9 @@ function applyPreset(presetId) {
 
   validateTierRequirements(currentCategoryKey);
   closeSuggestionsModal();
-  showToast(`Applied preset: ${preset.title}`);
+  showToast(`Applied ${preset.title}`);
   render();
 }
 
-// Initial Boot
 loadBuildFromURL();
 render();
