@@ -73,16 +73,19 @@ function setCategory(key) {
   render();
 }
 
-function applyPreset(presetId) {
-  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[currentCategoryKey]) || [];
+function applyPreset(presetId, categoryKey) {
+  const targetCategory = categoryKey || currentCategoryKey;
+  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[targetCategory]) || [];
   const preset = suggestions.find(p => p.id === presetId);
   if (!preset) return;
 
-  const currentCat = SKILL_DATABASE[currentCategoryKey];
-  currentCat.skills.forEach(s => delete skillRanks[s.id]);
+  const cat = SKILL_DATABASE[targetCategory];
+  cat.skills.forEach(s => delete skillRanks[s.id]);
   preset.skills.forEach(skillId => skillRanks[skillId] = 1);
 
-  validateTierRequirements(currentCategoryKey);
+  validateTierRequirements(targetCategory);
+  currentCategoryKey = targetCategory; // Navigate directly to that category tab
+
   closeSuggestionsModal();
   showToast(`Applied ${preset.title}`);
   render();
@@ -111,11 +114,12 @@ function loadBuildFromURL() {
         }
       }
     } catch (e) {
-      console.error(e);
+      console.error("Invalid build parameter", e);
     }
   }
 }
 
-// Initial Boot
+// Initial Boot: Load URL build, restore Farm ID from local storage, and render UI
+loadSavedFarmId();
 loadBuildFromURL();
 render();
