@@ -1,6 +1,22 @@
 const SUGGESTIONS_DATABASE = {
   crops: [
     {
+      id: "advanced_crop_mastery",
+      title: "Advanced Crops Focus",
+      tag: "ADVANCED CROPS",
+      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+      description: "Maximizes yields, growth speed, and AOE boosts specifically for high-tier advanced crops with instant harvest and delivery bonuses.",
+      skills: [
+        "green_thumb",
+        "bettys_friend",
+        "old_farmer",
+        "strong_roots",
+        "lauries_gains",
+        "instant_growth",
+        "acre_farm"
+      ]
+    },
+    {
       id: "crop_speedrunner",
       title: "Max Growth Speedrun",
       tag: "SPEED",
