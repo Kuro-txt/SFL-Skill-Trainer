@@ -3,48 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sunflower Land — Skill Matrix</title>
+  <title>Sunflower Land — Skill Trainer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="min-h-screen flex flex-col justify-between p-2 sm:p-3 selection:bg-amber-400 selection:text-black">
+<body class="min-h-screen flex flex-col p-2 sm:p-3 selection:bg-amber-400 selection:text-black">
 
   <div class="max-w-xl w-full mx-auto flex flex-col gap-2 flex-grow">
     
-    <!-- Ultra-Compact Top Bar -->
-    <header class="card-glass rounded-xl p-2 flex items-center justify-between gap-1.5">
-      <div class="flex items-center gap-1.5">
-        <span class="text-lg">🌻</span>
-        <h1 class="font-display text-xs font-bold text-white tracking-tight leading-none">SFL MATRIX</h1>
+    <!-- Top Bar: Title & Global Counters -->
+    <header class="card-glass rounded-xl p-2.5 flex flex-col gap-2">
+      
+      <!-- Top Row: Brand & Live Totals -->
+      <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xl">🌻</span>
+          <div>
+            <h1 class="font-display text-xs sm:text-sm font-bold text-white tracking-tight leading-none">SKILL TRAINER</h1>
+            <span class="text-[9px] text-amber-400/80 font-medium">Sunflower Land</span>
+          </div>
+        </div>
+
+        <!-- Total Investment Counters & Share -->
+        <div class="flex items-center gap-1.5">
+          <div class="card-sub px-2 py-1 rounded-lg flex items-center gap-1">
+            <span class="text-[9px] text-slate-400 font-semibold uppercase">Total</span>
+            <span id="hud-total-points" class="font-display font-bold text-xs text-amber-400">0 pts</span>
+          </div>
+
+          <div class="card-sub px-2 py-1 rounded-lg flex items-center gap-1 border-cyan-500/20">
+            <span class="text-cyan-400 text-xs">🔷</span>
+            <span id="hud-total-shards" class="font-display font-bold text-xs text-cyan-300">0</span>
+          </div>
+
+          <button type="button" onclick="exportBuildLink()" class="btn-primary px-2.5 py-1 rounded-lg text-slate-950 font-display font-bold text-[11px] cursor-pointer whitespace-nowrap shadow">
+            Share
+          </button>
+        </div>
       </div>
 
-      <!-- Farm Sync & Global Badges -->
-      <div class="flex items-center gap-1.5 flex-grow justify-end">
-        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900 rounded-lg border border-slate-700/80 p-0.5 max-w-[130px] w-full">
-          <span class="pl-1 text-slate-500 text-[10px]">#</span>
+      <!-- Bottom Row: Farm Sync & Actions -->
+      <div class="flex items-center justify-between gap-1.5">
+        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900 rounded-lg border border-slate-700/80 p-0.5 flex-grow max-w-[170px]">
+          <span class="pl-1.5 text-slate-500 text-[10px]">#</span>
           <input 
             id="farm-id-input" 
             type="number" 
             placeholder="Farm ID" 
-            class="w-full px-1 py-0.5 bg-transparent text-[11px] text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            class="w-full px-1 py-0.5 bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             required 
           />
-          <button id="fetch-btn" type="submit" class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[9px]">
+          <button id="fetch-btn" type="submit" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px] whitespace-nowrap">
             Sync
           </button>
         </form>
 
-        <button type="button" onclick="openSuggestionsModal()" class="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] font-bold text-amber-300">
-          💡 Presets
-        </button>
+        <div class="flex items-center gap-1">
+          <button type="button" onclick="openSuggestionsModal()" class="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] font-bold text-amber-300 whitespace-nowrap">
+            💡 Presets
+          </button>
 
-        <button type="button" onclick="resetCurrentCategory()" class="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-[10px] font-medium text-slate-300">
-          Reset
-        </button>
+          <button type="button" onclick="resetCurrentCategory()" class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-[10px] font-medium text-slate-300">
+            Reset
+          </button>
+        </div>
       </div>
+
     </header>
 
     <!-- Category Pill Carousel -->
@@ -115,24 +142,6 @@
 
     </main>
   </div>
-
-  <!-- Bottom Compact Summary Dock -->
-  <footer class="max-w-xl w-full mx-auto mt-2 card-glass rounded-xl p-2 flex items-center justify-between gap-2">
-    <div class="flex items-center gap-1.5">
-      <div class="card-sub px-2.5 py-1 rounded-lg flex items-center gap-1 text-xs">
-        <span class="text-[9px] text-slate-400 uppercase font-semibold">Total</span>
-        <span id="dock-points" class="font-display font-bold text-amber-400">0 pts</span>
-      </div>
-      <div class="card-sub px-2 py-1 rounded-lg flex items-center gap-1 text-xs border-cyan-500/20">
-        <span class="text-cyan-400 text-xs">🔷</span>
-        <span id="dock-shards" class="font-display font-bold text-cyan-300">0</span>
-      </div>
-    </div>
-
-    <button type="button" onclick="exportBuildLink()" class="btn-primary px-3.5 py-1.5 rounded-lg text-slate-950 font-display font-bold text-xs cursor-pointer shadow">
-      Copy Link
-    </button>
-  </footer>
 
   <!-- Presets Modal -->
   <div id="suggestions-modal" onclick="onModalBackdropClick(event)" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 p-2.5" style="display: none;">
