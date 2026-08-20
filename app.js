@@ -61,6 +61,30 @@ function getTotalGlobalInvestments() {
   return { points, shards };
 }
 
+// Clicking the card toggles between Rank 1 and unselected
+function toggleSkillCard(skillId) {
+  const cat = SKILL_DATABASE[currentCategoryKey];
+  const skill = cat.skills.find(s => s.id === skillId);
+  if (!skill) return;
+
+  const currentRank = skillRanks[skillId] || 0;
+
+  if (currentRank > 0) {
+    // Unselect completely
+    delete skillRanks[skillId];
+    validateTierRequirements(currentCategoryKey);
+  } else {
+    // Allocate to Rank 1 if prerequisites are met
+    const inv = getCategoryInvestments(currentCategoryKey);
+    if (skill.tier === 2 && inv.totalPoints < cat.reqs.t2) return;
+    if (skill.tier === 3 && inv.totalPoints < cat.reqs.t3) return;
+
+    skillRanks[skillId] = 1;
+  }
+
+  render();
+}
+
 function upgradeSkill(skillId, event) {
   if (event) event.stopPropagation();
   const cat = SKILL_DATABASE[currentCategoryKey];
@@ -70,7 +94,6 @@ function upgradeSkill(skillId, event) {
   const currentRank = skillRanks[skillId] || 0;
   if (currentRank >= 3) return;
 
-  // Prerequisites check for Rank 1 unlock
   if (currentRank === 0) {
     const inv = getCategoryInvestments(currentCategoryKey);
     if (skill.tier === 2 && inv.totalPoints < cat.reqs.t2) return;
@@ -100,12 +123,12 @@ function validateTierRequirements(catKey) {
   const cat = SKILL_DATABASE[catKey];
   let inv = getCategoryInvestments(catKey);
 
-  // Downgrade Tier 3 if requirement broken
+  // Downgrade Tier 3 if requirement is broken
   if (inv.totalPoints < cat.reqs.t3) {
     cat.skills.filter(s => s.tier === 3).forEach(s => delete skillRanks[s.id]);
   }
   inv = getCategoryInvestments(catKey);
-  // Downgrade Tier 2 if requirement broken
+  // Downgrade Tier 2 if requirement is broken
   if (inv.totalPoints < cat.reqs.t2) {
     cat.skills.filter(s => s.tier === 2).forEach(s => delete skillRanks[s.id]);
   }
@@ -173,7 +196,7 @@ function renderTierGrid(tierNum, elementId) {
     }
 
     return `
-      <div class="${cardClass} p-2.5 rounded-lg flex flex-col justify-between select-none">
+      <div onclick="toggleSkillCard('${skill.id}')" class="${cardClass} p-2.5 rounded-lg flex flex-col justify-between select-none cursor-pointer transition-all">
         <div>
           <!-- Title & Rank Dots -->
           <div class="flex items-center justify-between gap-1.5 mb-1.5">
@@ -204,7 +227,7 @@ function renderTierGrid(tierNum, elementId) {
             ${isTierUnlocked || isAllocated ? nextCostText : `REQ ${req}P`}
           </span>
 
-          <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1" onclick="event.stopPropagation()">
             <button type="button" onclick="downgradeSkill('${skill.id}', event)" ${rank === 0 ? 'disabled' : ''} class="btn-step w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-slate-200">
               -
             </button>
@@ -316,7 +339,6 @@ function loadBuildFromURL() {
       const decoded = JSON.parse(atob(build));
       if (typeof decoded === "object" && decoded !== null) {
         if (Array.isArray(decoded)) {
-          // Backward compatibility with previous array format
           skillRanks = {};
           decoded.forEach(id => skillRanks[id] = 1);
         } else {
