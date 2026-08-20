@@ -3,112 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sunflower Land Skill Trainer</title>
+  <title>Sunflower Land — Skill Matrix</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="p-3 md:p-6 min-h-screen flex justify-center items-start">
+<body class="min-h-screen text-slate-100 flex flex-col items-center p-3 sm:p-6 selection:bg-amber-400 selection:text-black">
 
-  <!-- Main SFL Game Modal -->
-  <div class="sfl-box rounded-xl max-w-6xl w-full p-4 md:p-6 flex flex-col gap-4">
+  <div class="max-w-7xl w-full flex flex-col gap-4">
     
-    <!-- Top Header & Points HUD -->
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b-4 border-[#7c4822] pb-3">
+    <!-- Modern Game Topbar -->
+    <header class="card-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-800">
       <div class="flex items-center gap-3">
-        <span class="text-3xl">🌻</span>
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+          🌻
+        </div>
         <div>
-          <h1 class="font-pixel text-xs sm:text-sm text-yellow-100 drop-shadow-[0_2px_0_#4b2813]">
-            SKILL TREE TRAINER
-          </h1>
-          <span class="text-xs font-semibold text-amber-950/80">Sunflower Land Planner</span>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display text-base sm:text-lg font-bold tracking-tight text-white">SUNFLOWER LAND</h1>
+            <span class="px-2 py-0.5 rounded-md bg-amber-400/10 border border-amber-400/30 text-[9px] font-pixel text-amber-400">SKILLS</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Bumpkin Talent Matrix & Build Optimizer</p>
         </div>
       </div>
 
+      <!-- Live Counters & Action Toolbar -->
       <div class="flex items-center gap-3 flex-wrap">
-        <div class="sfl-inner-box px-3 py-1.5 rounded flex items-center gap-2">
-          <span class="font-pixel text-[9px] text-amber-900">POINTS:</span>
-          <span id="hud-total-points" class="font-pixel text-[10px] text-emerald-800 font-bold">0 PTS</span>
+        <div class="card-sub px-3 py-1.5 rounded-xl flex items-center gap-2 border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Total Spent</span>
+          <span id="hud-total-points" class="font-display font-bold text-sm text-amber-400">0 pts</span>
         </div>
 
-        <button onclick="resetCurrentCategory()" class="sfl-btn px-3 py-1.5 rounded font-pixel text-[9px] text-amber-950">
-          RESET TAB
+        <div class="card-sub px-3 py-1.5 rounded-xl flex items-center gap-2 border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Tab Points</span>
+          <span id="hud-cat-points" class="font-display font-bold text-sm text-emerald-400">0 pts</span>
+        </div>
+
+        <button onclick="resetCurrentCategory()" class="btn-slate px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300">
+          Reset Tab
         </button>
 
-        <button onclick="resetAllSkills()" class="sfl-btn sfl-btn-danger px-3 py-1.5 rounded font-pixel text-[9px] text-white">
-          RESET ALL
+        <button onclick="resetAllSkills()" class="btn-rose px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-300">
+          Reset All
         </button>
       </div>
-    </div>
+    </header>
 
-    <!-- Category Tabs -->
-    <div id="category-tabs" class="flex gap-1.5 overflow-x-auto pb-1"></div>
+    <!-- Category Pill Selector -->
+    <div id="category-tabs" class="flex gap-2 overflow-x-auto pb-1 scrollbar-none"></div>
 
-    <!-- Workspace: Tiers (Left) & Compact Summary (Right) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-      
-      <!-- Skill Matrix (2 Columns) -->
-      <div class="lg:col-span-2 flex flex-col gap-3">
+    <!-- Main Content Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+
+      <!-- Skills Column (3 Cols) -->
+      <main class="lg:col-span-3 flex flex-col gap-4">
         
-        <!-- Tier 1 -->
-        <div class="sfl-inner-box p-3 rounded">
-          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
-            <span class="font-pixel text-[10px] text-amber-950">TIER 1 (0 Req)</span>
-            <span id="tier-1-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
+        <!-- Tier 1 Container -->
+        <section class="card-glass rounded-2xl p-4 border border-slate-800/80">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-pixel text-emerald-400">TIER 1</span>
+              <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Foundation Perks</h2>
+            </div>
+            <span id="tier-1-status" class="text-[10px] font-medium text-emerald-400">0 Spent</span>
           </div>
-          <div id="tier-1-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
-        </div>
+          <div id="tier-1-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+        </section>
 
-        <!-- Tier 2 -->
-        <div class="sfl-inner-box p-3 rounded">
-          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
-            <span id="tier-2-header" class="font-pixel text-[10px] text-amber-950">TIER 2</span>
-            <span id="tier-2-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
+        <!-- Tier 2 Container -->
+        <section id="tier-2-panel" class="card-glass rounded-2xl p-4 border border-slate-800/80">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-[10px] font-pixel text-amber-400">TIER 2</span>
+              <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Advanced Mastery</h2>
+            </div>
+            <span id="tier-2-status" class="text-[10px] font-medium text-slate-400">Req: 3 pts</span>
           </div>
-          <div id="tier-2-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
-        </div>
+          <div id="tier-2-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+        </section>
 
-        <!-- Tier 3 -->
-        <div class="sfl-inner-box p-3 rounded">
-          <div class="flex justify-between items-center mb-2 pb-1 border-b-2 border-amber-900/20">
-            <span id="tier-3-header" class="font-pixel text-[10px] text-amber-950">TIER 3</span>
-            <span id="tier-3-count" class="font-pixel text-[9px] text-amber-800">0 pts</span>
+        <!-- Tier 3 Container -->
+        <section id="tier-3-panel" class="card-glass rounded-2xl p-4 border border-slate-800/80">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/30 text-[10px] font-pixel text-purple-400">TIER 3</span>
+              <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Apex Abilities</h2>
+            </div>
+            <span id="tier-3-status" class="text-[10px] font-medium text-slate-400">Req: 7 pts</span>
           </div>
-          <div id="tier-3-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
-        </div>
+          <div id="tier-3-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+        </section>
 
-      </div>
+      </main>
 
-      <!-- Compact Sidebar Summary (1 Column) -->
-      <div class="sfl-inner-box p-3 rounded flex flex-col gap-3">
-        <h2 class="font-pixel text-[10px] text-amber-950 border-b-2 border-amber-900/20 pb-1">
-          ACTIVE STATS
-        </h2>
-
-        <!-- Buffs -->
+      <!-- Build Stats & Optimizer Sidebar (1 Col) -->
+      <aside class="card-glass rounded-2xl p-4 border border-slate-800/80 sticky top-4 flex flex-col gap-4">
+        
         <div>
-          <span class="font-pixel text-[8px] text-emerald-800 uppercase block mb-1">Buffs</span>
-          <div id="buffs-list" class="max-h-48 overflow-y-auto space-y-1 pr-1 text-xs"></div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+            <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-display">Active Synergies</h2>
+            <span class="text-xs">⚡</span>
+          </div>
+
+          <!-- Tier Point Badges -->
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="card-sub p-2 rounded-xl border border-slate-800 text-center">
+              <div class="text-[9px] text-slate-500 font-bold uppercase">Tier 1</div>
+              <div id="summary-t1" class="font-display font-bold text-xs text-emerald-400">0</div>
+            </div>
+            <div class="card-sub p-2 rounded-xl border border-slate-800 text-center">
+              <div class="text-[9px] text-slate-500 font-bold uppercase">Tier 2</div>
+              <div id="summary-t2" class="font-display font-bold text-xs text-amber-400">0</div>
+            </div>
+            <div class="card-sub p-2 rounded-xl border border-slate-800 text-center">
+              <div class="text-[9px] text-slate-500 font-bold uppercase">Tier 3</div>
+              <div id="summary-t3" class="font-display font-bold text-xs text-purple-400">0</div>
+            </div>
+          </div>
+
+          <!-- Active Perks Box -->
+          <div class="space-y-1.5 mb-3">
+            <span class="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+              <span>●</span> Yield & Production Buffs
+            </span>
+            <div id="buffs-list" class="max-h-52 overflow-y-auto space-y-1.5 pr-1"></div>
+          </div>
+
+          <!-- Active Debuffs Box -->
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-semibold text-rose-400 uppercase tracking-wider flex items-center gap-1">
+              <span>●</span> Tradeoffs & Extra Costs
+            </span>
+            <div id="debuffs-list" class="max-h-40 overflow-y-auto space-y-1.5 pr-1"></div>
+          </div>
         </div>
 
-        <!-- Debuffs -->
-        <div>
-          <span class="font-pixel text-[8px] text-rose-800 uppercase block mb-1">Tradeoffs / Debuffs</span>
-          <div id="debuffs-list" class="max-h-36 overflow-y-auto space-y-1 pr-1 text-xs"></div>
-        </div>
-
-        <!-- Share Build Button -->
-        <div class="pt-2 border-t-2 border-amber-900/20">
-          <button onclick="exportBuildLink()" class="sfl-btn w-full py-2 rounded font-pixel text-[9px] text-amber-950">
-            SHARE BUILD LINK
+        <!-- Share Actions -->
+        <div class="pt-3 border-t border-slate-800 flex flex-col gap-2">
+          <button onclick="exportBuildLink()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-display font-bold text-xs shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all active:scale-[0.98]">
+            Copy Build Link
           </button>
-          <div id="toast-msg" class="text-center font-pixel text-[8px] text-emerald-900 mt-1 opacity-0 transition-opacity">
-            COPIED TO CLIPBOARD!
+          <div id="toast-msg" class="text-center text-[10px] font-medium text-emerald-400 opacity-0 transition-opacity">
+            Link copied to clipboard!
           </div>
         </div>
-      </div>
+
+      </aside>
 
     </div>
   </div>
