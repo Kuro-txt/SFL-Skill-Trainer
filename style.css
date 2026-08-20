@@ -1,84 +1,83 @@
 :root {
   --font-pixel: 'Press Start 2P', monospace;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
-  /* SFL Classic UI Palette */
-  --sfl-board: #c28d5d;
-  --sfl-border-dark: #4b2813;
-  --sfl-border-light: #e4ad7e;
-  --sfl-card-bg: #edd3a8;
-  --sfl-card-active: #ffea9f;
-  --sfl-card-locked: #a39587;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-ui: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
-  font-family: var(--font-body);
-  background-color: #63ab3f; /* SFL Grass Green */
+  font-family: var(--font-ui);
+  background-color: #0b0f19;
   background-image: 
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 2px, transparent 0);
-  background-size: 24px 24px;
-  color: #3e2723;
-  image-rendering: pixelated;
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.05) 0px, transparent 40%),
+    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 40%),
+    radial-gradient(at 50% 50%, #111827 0px, #0b0f19 100%);
 }
 
-.font-pixel {
-  font-family: var(--font-pixel);
+.font-pixel { font-family: var(--font-pixel); }
+.font-display { font-family: var(--font-display); }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #d97706; }
+
+/* Panels */
+.card-glass {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
 }
 
-/* SFL 9-Slice Style Retro Wood Boxes */
-.sfl-box {
-  background-color: var(--sfl-board);
-  border: 4px solid var(--sfl-border-dark);
-  box-shadow: inset -4px -4px 0px 0px #8b5a2b, inset 4px 4px 0px 0px var(--sfl-border-light), 0 6px 0px rgba(0,0,0,0.25);
+.card-sub {
+  background: rgba(15, 23, 42, 0.6);
 }
 
-.sfl-inner-box {
-  background-color: #f7e6c4;
-  border: 3px solid #7c4822;
-  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
+/* Interactive Buttons */
+.btn-slate {
+  background: #1e293b;
+  border: 1px solid #334155;
+  transition: all 0.15s ease;
+}
+.btn-slate:hover {
+  background: #334155;
+  border-color: #475569;
+}
+.btn-slate:active { transform: scale(0.96); }
+
+.btn-rose {
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  transition: all 0.15s ease;
+}
+.btn-rose:hover {
+  background: rgba(225, 29, 72, 0.25);
+  border-color: rgba(225, 29, 72, 0.6);
+}
+.btn-rose:active { transform: scale(0.96); }
+
+/* Skill Matrix Cards */
+.skill-card {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  transition: all 0.15s ease;
 }
 
-/* Compact Skill Cards */
-.sfl-card {
-  background-color: var(--sfl-card-bg);
-  border: 3px solid #8d5524;
-  box-shadow: inset -2px -2px 0px #c49a6c, inset 2px 2px 0px #fff4dc;
-  transition: transform 0.05s ease, background-color 0.1s ease;
-}
-
-.sfl-card:hover:not(.locked) {
+.skill-card.available:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: rgba(30, 41, 59, 0.6);
   transform: translateY(-2px);
-  filter: brightness(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.sfl-card.active {
-  background-color: var(--sfl-card-active);
-  border-color: #b8860b;
-  box-shadow: inset -2px -2px 0px #d4a017, inset 2px 2px 0px #ffffff;
+.skill-card.active {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.04) 100%);
+  border-color: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.12), inset 0 0 8px rgba(245, 158, 11, 0.05);
 }
 
-.sfl-card.locked {
-  background-color: var(--sfl-card-locked);
-  border-color: #5c5248;
-  opacity: 0.6;
+.skill-card.locked {
+  background: rgba(15, 23, 42, 0.25);
+  border-color: rgba(30, 41, 59, 0.5);
+  opacity: 0.45;
   cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Retro Pixel Button */
-.sfl-btn {
-  background-color: #e09f3e;
-  border: 3px solid #542b0d;
-  box-shadow: inset -2px -2px 0px #9e6417, inset 2px 2px 0px #ffd285, 0 3px 0 #3a1c06;
-}
-
-.sfl-btn:active {
-  transform: translateY(3px);
-  box-shadow: inset -2px -2px 0px #9e6417, inset 2px 2px 0px #ffd285;
-}
-
-.sfl-btn-danger {
-  background-color: #d9534f;
-  border-color: #501311;
-  box-shadow: inset -2px -2px 0px #8b2320, inset 2px 2px 0px #f39b98, 0 3px 0 #3a0d0c;
 }
