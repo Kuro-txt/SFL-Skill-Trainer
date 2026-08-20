@@ -1,3 +1,5 @@
+let modalSelectedCategoryKey = "crops";
+
 function renderTabs() {
   const nav = document.getElementById("category-tabs");
   nav.innerHTML = Object.entries(SKILL_DATABASE).map(([key, cat]) => {
@@ -168,20 +170,54 @@ function showToast(message, type = "success") {
   setTimeout(() => { toast.classList.remove("toast-active"); }, 2400);
 }
 
+// --- Presets Modal Logic with Sub-Tabs ---
 function openSuggestionsModal() {
   const modal = document.getElementById("suggestions-modal");
-  const listContainer = document.getElementById("suggestions-list");
-  const currentCat = SKILL_DATABASE[currentCategoryKey];
-  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[currentCategoryKey]) || [];
+  modalSelectedCategoryKey = currentCategoryKey; // default to the currently open tab
+  renderModalContent();
+  modal.style.display = "flex";
+}
 
-  document.getElementById("modal-category-title").innerText = `${currentCat.name} Presets`;
+function setModalCategory(catKey) {
+  modalSelectedCategoryKey = catKey;
+  renderModalContent();
+}
+
+function renderModalContent() {
+  const tabsContainer = document.getElementById("modal-category-tabs");
+  const listContainer = document.getElementById("suggestions-list");
+
+  // Render modal category selection tabs
+  tabsContainer.innerHTML = Object.entries(SKILL_DATABASE).map(([key, cat]) => {
+    const isSelected = key === modalSelectedCategoryKey;
+    const presetsCount = (SUGGESTIONS_DATABASE[key] || []).length;
+    return `
+      <button type="button" onclick="setModalCategory('${key}')" class="px-2 py-1 rounded text-[11px] font-semibold whitespace-nowrap transition flex items-center gap-1 cursor-pointer ${
+        isSelected
+          ? 'bg-amber-400/20 border border-amber-400 text-amber-300'
+          : 'bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200'
+      }">
+        <span>${cat.icon}</span>
+        <span>${cat.name}</span>
+        ${presetsCount > 0 ? `<span class="text-[9px] px-1 rounded-full bg-slate-800 text-slate-300">${presetsCount}</span>` : ''}
+      </button>
+    `;
+  }).join('');
+
+  // Render presets for selected tab
+  const activeCat = SKILL_DATABASE[modalSelectedCategoryKey];
+  const suggestions = (typeof SUGGESTIONS_DATABASE !== "undefined" && SUGGESTIONS_DATABASE[modalSelectedCategoryKey]) || [];
 
   if (suggestions.length === 0) {
-    listContainer.innerHTML = `<div class="p-4 rounded-lg card-sub text-center text-xs text-slate-500 italic">No presets added yet.</div>`;
+    listContainer.innerHTML = `
+      <div class="p-6 rounded-lg card-sub text-center text-xs text-slate-500 italic">
+        No community presets added for ${activeCat.name} yet.
+      </div>
+    `;
   } else {
     listContainer.innerHTML = suggestions.map(preset => {
       const skillPills = preset.skills.map(id => {
-        const found = currentCat.skills.find(s => s.id === id);
+        const found = activeCat.skills.find(s => s.id === id);
         return found ? `<span class="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">${found.icon} ${found.name}</span>` : '';
       }).join(' ');
 
@@ -192,18 +228,16 @@ function openSuggestionsModal() {
               <h4 class="font-display font-bold text-xs text-white">${preset.title}</h4>
               <span class="px-1.5 py-0.2 rounded text-[8px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
             </div>
-            <button type="button" onclick="applyPreset('${preset.id}')" class="btn-primary px-2 py-0.5 rounded text-slate-950 font-display font-bold text-[11px] cursor-pointer">
-              Apply
+            <button type="button" onclick="applyPreset('${preset.id}', '${modalSelectedCategoryKey}')" class="btn-primary px-2.5 py-1 rounded text-slate-950 font-display font-bold text-[11px] cursor-pointer">
+              Apply Build
             </button>
           </div>
-          <p class="text-[11px] text-slate-400">${preset.description}</p>
+          <p class="text-[11px] text-slate-400 leading-relaxed">${preset.description}</p>
           <div class="flex flex-wrap gap-1 pt-1 border-t border-slate-800/60">${skillPills}</div>
         </div>
       `;
     }).join('');
   }
-
-  modal.style.display = "flex";
 }
 
 function closeSuggestionsModal() {
