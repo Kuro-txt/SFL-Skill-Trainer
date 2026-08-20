@@ -74,14 +74,14 @@ function renderTabs() {
     const isActive = key === currentCategoryKey;
     const catPts = getCategoryPoints(key).total;
     return `
-      <button onclick="setCategory('${key}')" class="px-2.5 py-1.5 rounded text-[11px] font-bold whitespace-nowrap border-2 flex items-center gap-1.5 ${
+      <button onclick="setCategory('${key}')" class="px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border flex items-center gap-2 ${
         isActive
-          ? 'bg-[#ffe4a0] border-[#7c4822] text-[#3e2723] shadow-inner'
-          : 'bg-[#d8a878] border-[#8d5524] text-[#542e13] hover:bg-[#e4b787]'
+          ? 'bg-amber-400/10 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+          : 'card-glass border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
       }">
-        <span>${cat.icon}</span>
+        <span class="text-sm">${cat.icon}</span>
         <span>${cat.name}</span>
-        ${catPts > 0 ? `<span class="px-1 py-0.2 rounded bg-amber-800 text-yellow-100 text-[8px] font-pixel">${catPts}</span>` : ''}
+        ${catPts > 0 ? `<span class="px-1.5 py-0.2 rounded-full bg-amber-400/20 text-[9px] font-pixel text-amber-300 font-bold">${catPts}</span>` : ''}
       </button>
     `;
   }).join('');
@@ -97,25 +97,29 @@ function renderTierGrid(tierNum, elementId) {
   const container = document.getElementById(elementId);
   container.innerHTML = tierSkills.map(skill => {
     const isAllocated = activeSkills.has(skill.id);
-    let cardClass = isAllocated ? "sfl-card active" : (isUnlocked ? "sfl-card" : "sfl-card locked");
+    let cardClass = isAllocated ? "skill-card active" : (isUnlocked ? "skill-card available" : "skill-card locked");
 
     return `
-      <div onclick="toggleSkill('${skill.id}')" class="${cardClass} p-2 rounded cursor-pointer flex flex-col justify-between select-none">
+      <div onclick="toggleSkill('${skill.id}')" class="${cardClass} p-3 rounded-xl cursor-pointer flex flex-col justify-between select-none">
         <div>
-          <div class="flex items-center justify-between gap-1 mb-1">
-            <div class="flex items-center gap-1.5">
-              <span class="text-lg">${skill.icon}</span>
-              <span class="font-bold text-xs leading-tight text-[#3e2723]">${skill.name}</span>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">${skill.icon}</span>
+              <span class="text-xs font-bold font-display ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
             </div>
-            <span class="font-pixel text-[8px] ${isAllocated ? 'text-amber-900 font-bold' : 'text-stone-600'}">
+            <span class="px-2 py-0.5 rounded text-[9px] font-pixel ${isAllocated ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400'}">
               ${skill.cost}P
             </span>
           </div>
 
-          <div class="space-y-0.5 text-[11px] leading-tight">
-            ${skill.buffs.map(b => `<p class="text-emerald-900 font-medium">• ${b}</p>`).join('')}
-            ${skill.debuffs.map(d => `<p class="text-rose-900 font-medium">• ${d}</p>`).join('')}
+          <div class="space-y-1 text-xs">
+            ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-snug">• ${b}</p>`).join('')}
+            ${skill.debuffs.map(d => `<p class="text-rose-400 leading-snug">• ${d}</p>`).join('')}
           </div>
+        </div>
+
+        <div class="text-[9px] font-pixel text-slate-500 text-right mt-2">
+          ${isAllocated ? 'ACTIVE' : (isUnlocked ? '+ LEARN' : `REQ ${req}P`)}
         </div>
       </div>
     `;
@@ -126,13 +130,16 @@ function renderSummary() {
   const cat = SKILL_DATABASE[currentCategoryKey];
   const points = getCategoryPoints(currentCategoryKey);
 
-  document.getElementById('hud-total-points').innerText = `${getTotalAllPoints()} PTS SPENT`;
-  document.getElementById('tier-1-count').innerText = `${points.t1} pts`;
-  document.getElementById('tier-2-count').innerText = `${points.t2} pts`;
-  document.getElementById('tier-3-count').innerText = `${points.t3} pts`;
+  document.getElementById('hud-total-points').innerText = `${getTotalAllPoints()} pts`;
+  document.getElementById('hud-cat-points').innerText = `${points.total} pts`;
 
-  document.getElementById('tier-2-header').innerText = `TIER 2 (${cat.reqs.t2} Req) - ${points.total >= cat.reqs.t2 ? 'UNLOCKED' : 'LOCKED'}`;
-  document.getElementById('tier-3-header').innerText = `TIER 3 (${cat.reqs.t3} Req) - ${points.total >= cat.reqs.t3 ? 'UNLOCKED' : 'LOCKED'}`;
+  document.getElementById('tier-1-status').innerText = `${points.t1} pts allocated`;
+  document.getElementById('tier-2-status').innerText = `${points.total >= cat.reqs.t2 ? 'UNLOCKED' : 'LOCKED'} (${points.t2}/${cat.reqs.t2} Req)`;
+  document.getElementById('tier-3-status').innerText = `${points.total >= cat.reqs.t3 ? 'UNLOCKED' : 'LOCKED'} (${points.t3}/${cat.reqs.t3} Req)`;
+
+  document.getElementById('summary-t1').innerText = points.t1;
+  document.getElementById('summary-t2').innerText = points.t2;
+  document.getElementById('summary-t3').innerText = points.t3;
 
   let buffs = [];
   let debuffs = [];
@@ -140,21 +147,31 @@ function renderSummary() {
   Object.values(SKILL_DATABASE).forEach(c => {
     c.skills.forEach(s => {
       if (activeSkills.has(s.id)) {
-        s.buffs.forEach(b => buffs.push({ text: b, icon: s.icon }));
-        s.debuffs.forEach(d => debuffs.push({ text: d, icon: s.icon }));
+        s.buffs.forEach(b => buffs.push({ text: b, icon: s.icon, name: s.name }));
+        s.debuffs.forEach(d => debuffs.push({ text: d, icon: s.icon, name: s.name }));
       }
     });
   });
 
   const buffsEl = document.getElementById('buffs-list');
   buffsEl.innerHTML = buffs.length === 0 
-    ? `<div class="text-stone-600 italic">No buffs selected</div>`
-    : buffs.map(b => `<div class="p-1 bg-[#fff8e7] border border-[#d6b485] rounded text-emerald-900">${b.icon} ${b.text}</div>`).join('');
+    ? `<div class="text-xs text-slate-500 italic p-2.5 rounded-lg bg-slate-900/40 border border-slate-800">No buffs selected</div>`
+    : buffs.map(b => `
+        <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2">
+          <span>${b.icon}</span>
+          <span class="font-medium">${b.text}</span>
+        </div>
+      `).join('');
 
   const debuffsEl = document.getElementById('debuffs-list');
   debuffsEl.innerHTML = debuffs.length === 0
-    ? `<div class="text-stone-600 italic">No debuffs selected</div>`
-    : debuffs.map(d => `<div class="p-1 bg-[#ffebe6] border border-[#dca69f] rounded text-rose-900">${d.icon} ${d.text}</div>`).join('');
+    ? `<div class="text-xs text-slate-500 italic p-2.5 rounded-lg bg-slate-900/40 border border-slate-800">No debuffs active</div>`
+    : debuffs.map(d => `
+        <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 flex items-center gap-2">
+          <span>${d.icon}</span>
+          <span class="font-medium">${d.text}</span>
+        </div>
+      `).join('');
 }
 
 function render() {
