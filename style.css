@@ -6,91 +6,123 @@
 
 body {
   font-family: var(--font-ui);
-  background-color: #06090f;
+  background-color: #080c16;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.06) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.04) 0px, transparent 40%),
-    radial-gradient(at 50% 50%, #0c1220 0px, #06090f 100%);
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.06) 0px, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, #0d1424 0px, #080c16 100%);
   color: #f1f5f9;
-  touch-action: manipulation;
+  min-height: 100vh;
 }
 
 .font-pixel { font-family: var(--font-pixel); }
 .font-display { font-family: var(--font-display); }
 
 /* Minimal Scrollbars */
-::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-/* Panels */
+/* Frosted Glass Panels */
 .card-glass {
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.85) 0%, rgba(10, 15, 26, 0.95) 100%);
-  backdrop-filter: blur(14px);
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.75) 0%, rgba(11, 17, 30, 0.9) 100%);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
 }
 
 .card-sub {
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Compact Skill List Rows */
-.skill-row {
-  background: rgba(15, 23, 42, 0.55);
+/* Polished Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: 1px solid rgba(254, 240, 138, 0.3);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  transition: all 0.15s ease;
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover { background: rgba(51, 65, 85, 0.8); color: #ffffff; }
+
+.btn-danger {
+  background: rgba(225, 29, 72, 0.12);
+  border: 1px solid rgba(225, 29, 72, 0.35);
+  color: #fca5a5;
+  transition: all 0.15s ease;
+}
+.btn-danger:hover { background: rgba(225, 29, 72, 0.25); color: #fecdd3; }
+
+/* Skill Interactive Cards */
+.skill-card {
+  background: linear-gradient(180deg, rgba(19, 28, 48, 0.6) 0%, rgba(13, 19, 34, 0.8) 100%);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.12s ease;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.skill-row.active {
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%);
+.skill-card.available:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: linear-gradient(180deg, rgba(28, 44, 73, 0.7) 0%, rgba(16, 25, 45, 0.85) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.12);
+}
+
+.skill-card.active {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.14) 0%, rgba(180, 83, 9, 0.05) 100%);
   border-color: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.15), inset 0 0 8px rgba(245, 158, 11, 0.05);
 }
 
-.skill-row.locked {
+.skill-card.locked {
+  background: rgba(10, 14, 23, 0.35);
+  border-color: rgba(255, 255, 255, 0.02);
   opacity: 0.45;
-  filter: grayscale(0.5);
+  cursor: not-allowed;
+}
+
+/* Stepper Upgrade Buttons */
+.btn-step {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.1s ease;
+}
+.btn-step:hover:not(:disabled) {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+.btn-step:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
 }
 
 /* Rank Dots */
 .rank-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 9999px;
   background-color: #334155;
 }
 .rank-dot.active {
   background-color: #f59e0b;
-  box-shadow: 0 0 5px #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
 }
 
-/* Stepper Buttons */
-.btn-step {
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-.btn-step:active:not(:disabled) {
-  background: #3b82f6;
-  color: #ffffff;
-}
-.btn-step:disabled {
-  opacity: 0.2;
-  cursor: not-allowed;
-}
-
-/* Primary Action Buttons */
-.btn-primary {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  border: 1px solid rgba(254, 240, 138, 0.3);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
-}
-.btn-primary:active { transform: scale(0.97); }
-
-/* Toast */
+/* Floating Toast */
 #toast-notification {
-  transform: translateY(-80px);
+  transform: translateY(60px);
   opacity: 0;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 #toast-notification.toast-active {
   transform: translateY(0);
