@@ -1,3 +1,14 @@
+const FARM_STORAGE_KEY = "sfl_farm_id";
+
+// Pre-fills the Farm ID input from localStorage on load
+function loadSavedFarmId() {
+  const savedId = localStorage.getItem(FARM_STORAGE_KEY);
+  if (savedId) {
+    const input = document.getElementById("farm-id-input");
+    if (input) input.value = savedId;
+  }
+}
+
 async function fetchFarmSkills(event) {
   if (event) event.preventDefault();
 
@@ -6,6 +17,9 @@ async function fetchFarmSkills(event) {
   const fetchBtn = document.getElementById("fetch-btn");
 
   if (!farmId) return;
+
+  // Persist Farm ID to Local Storage
+  localStorage.setItem(FARM_STORAGE_KEY, farmId);
 
   const originalBtnText = fetchBtn.innerHTML;
   fetchBtn.disabled = true;
