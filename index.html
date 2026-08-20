@@ -8,93 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --font-rune: 'Cinzel', serif;
-      --font-pixel: 'Press Start 2P', monospace;
-      --font-ui: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    body {
-      font-family: var(--font-ui);
-      background-color: #05070d;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, #0c1220 0px, #05070d 100%);
-      color: #e2e8f0;
-      min-height: 100vh;
-    }
-
-    .font-rune { font-family: var(--font-rune); }
-    .font-pixel { font-family: var(--font-pixel); }
-
-    /* Custom Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #090e1a; }
-    ::-webkit-scrollbar-thumb { background: #22324e; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #d97706; }
-
-    /* Glass Panels */
-    .glass-panel {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(8, 13, 26, 0.88) 100%);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(254, 240, 138, 0.15);
-    }
-
-    /* Skill Card States */
-    .card-unlocked {
-      background: linear-gradient(180deg, rgba(180, 83, 9, 0.25) 0%, rgba(69, 26, 3, 0.4) 100%);
-      border: 1px solid #f59e0b;
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25), inset 0 0 12px rgba(245, 158, 11, 0.15);
-    }
-
-    .card-available {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
-    }
-
-    .card-available:hover {
-      border-color: #38bdf8;
-      transform: translateY(-2px);
-      box-shadow: 0 0 22px rgba(56, 189, 248, 0.35);
-    }
-
-    .card-locked {
-      background: rgba(10, 15, 26, 0.5);
-      border: 1px dashed rgba(71, 85, 105, 0.4);
-      opacity: 0.5;
-    }
-
-    /* Custom Hex/Octa Badges */
-    .tier-badge {
-      clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-    .tier-active-glow { animation: pulse-glow 2s infinite ease-in-out; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="relative flex flex-col justify-between selection:bg-amber-400 selection:text-black">
 
   <canvas id="star-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-  <!-- Main Container -->
   <div class="relative z-10 max-w-[1680px] w-full mx-auto px-4 py-5 flex flex-col gap-5 flex-grow">
     
     <!-- Top HUD Header -->
     <header class="glass-panel rounded-2xl p-4 lg:p-5 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 p-0.5 shadow-[0_0_20px_rgba(245,158,11,0.4)] flex-shrink-0">
-          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-2xl">
-            🌻
-          </div>
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-2xl">🌻</div>
         </div>
         <div>
           <h1 class="font-rune text-lg sm:text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">
@@ -104,7 +30,7 @@
         </div>
       </div>
 
-      <!-- Point Counter, Level, and Global Actions -->
+      <!-- Point Counter & Global Actions -->
       <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
         <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 border-amber-500/30">
           <span class="text-[9px] font-pixel text-amber-400/80 uppercase">Total Spent</span>
@@ -112,7 +38,7 @@
         </div>
 
         <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-          <span class="text-[9px] font-pixel text-emerald-400/80 uppercase">Points In Category</span>
+          <span class="text-[9px] font-pixel text-emerald-400/80 uppercase">Category Points</span>
           <span id="hud-cat-points" class="font-pixel text-xs text-emerald-300">0 pts</span>
         </div>
 
@@ -127,21 +53,17 @@
     </header>
 
     <!-- Category Tabs Navigation -->
-    <nav id="category-tabs" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none"></nav>
+    <nav id="category-tabs" class="flex gap-2 overflow-x-auto pb-2"></nav>
 
-    <!-- Main Workspace: Matrix Tree + Stats Sidebar -->
+    <!-- Main Workspace -->
     <div class="grid grid-cols-1 xl:grid-cols-4 gap-5 items-start">
-
-      <!-- Skills Matrix (3 Columns) -->
       <main class="xl:col-span-3 flex flex-col gap-5">
         
-        <!-- Tier 1 Container -->
+        <!-- Tier 1 -->
         <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <div class="flex items-center gap-3">
-              <span class="tier-badge bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-pixel text-[10px] px-3 py-1">
-                TIER 1
-              </span>
+              <span class="tier-badge bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-pixel text-[10px] px-3 py-1">TIER 1</span>
               <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Apprentice Disciplines</h2>
             </div>
             <span id="tier-1-status" class="text-[10px] font-pixel text-emerald-400">UNLOCKED (0/0)</span>
@@ -149,13 +71,11 @@
           <div id="tier-1-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- Tier 2 Container -->
-        <section id="tier-2-panel" class="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <!-- Tier 2 -->
+        <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <div class="flex items-center gap-3">
-              <span id="tier-2-badge" class="tier-badge bg-amber-500/20 border border-amber-400 text-amber-300 font-pixel text-[10px] px-3 py-1">
-                TIER 2
-              </span>
+              <span class="tier-badge bg-amber-500/20 border border-amber-400 text-amber-300 font-pixel text-[10px] px-3 py-1">TIER 2</span>
               <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Journeyman Mastery</h2>
             </div>
             <span id="tier-2-status" class="text-[10px] font-pixel text-amber-400">LOCKED (0/3)</span>
@@ -163,23 +83,20 @@
           <div id="tier-2-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- Tier 3 Container -->
-        <section id="tier-3-panel" class="glass-panel rounded-2xl p-5 relative overflow-hidden">
+        <!-- Tier 3 -->
+        <section class="glass-panel rounded-2xl p-5 relative overflow-hidden">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
             <div class="flex items-center gap-3">
-              <span id="tier-3-badge" class="tier-badge bg-purple-500/20 border border-purple-400 text-purple-300 font-pixel text-[10px] px-3 py-1">
-                TIER 3
-              </span>
+              <span class="tier-badge bg-purple-500/20 border border-purple-400 text-purple-300 font-pixel text-[10px] px-3 py-1">TIER 3</span>
               <h2 class="font-rune font-bold text-sm tracking-wider text-slate-200">Grandmaster Apex</h2>
             </div>
             <span id="tier-3-status" class="text-[10px] font-pixel text-purple-400">LOCKED (0/7)</span>
           </div>
           <div id="tier-3-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
-
       </main>
 
-      <!-- Dynamic Perks, Buffs & Debuffs Panel (1 Column) -->
+      <!-- Dynamic Sidebar -->
       <aside class="glass-panel rounded-2xl p-5 flex flex-col gap-6 sticky top-5">
         <div>
           <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
@@ -187,7 +104,6 @@
             <span class="text-xs">✨</span>
           </div>
 
-          <!-- Tier Points Breakdown -->
           <div class="grid grid-cols-3 gap-2 mb-4">
             <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
               <div class="text-[9px] font-pixel text-slate-400 mb-1">T1 PTS</div>
@@ -203,32 +119,23 @@
             </div>
           </div>
 
-          <!-- Active Buffs List -->
+          <!-- Active Buffs -->
           <div class="space-y-2 mb-4">
             <div class="text-[10px] font-pixel text-emerald-400 flex items-center gap-1.5">
               <span>▲</span> ACTIVE BUFFS
             </div>
-            <div id="buffs-list" class="max-h-56 overflow-y-auto space-y-2 pr-1">
-              <div class="text-xs text-slate-500 italic p-3 rounded-lg bg-slate-900/50 border border-slate-800/60">
-                No buffs selected.
-              </div>
-            </div>
+            <div id="buffs-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
           </div>
 
-          <!-- Active Debuffs List -->
+          <!-- Active Debuffs -->
           <div class="space-y-2">
             <div class="text-[10px] font-pixel text-rose-400 flex items-center gap-1.5">
               <span>▼</span> PENALTIES & COSTS
             </div>
-            <div id="debuffs-list" class="max-h-48 overflow-y-auto space-y-2 pr-1">
-              <div class="text-xs text-slate-500 italic p-3 rounded-lg bg-slate-900/50 border border-slate-800/60">
-                No debuffs selected.
-              </div>
-            </div>
+            <div id="debuffs-list" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
           </div>
         </div>
 
-        <!-- Build Export Link -->
         <div class="pt-4 border-t border-slate-800 space-y-2">
           <button onclick="exportBuildLink()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-pixel text-[10px] tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(245,158,11,0.3)]">
             COPY BUILD LINK
@@ -238,621 +145,12 @@
           </div>
         </div>
       </aside>
-
     </div>
   </div>
 
-  <script>
-    // --- Complete Official SFL Skills Database ---
-    const SKILL_DATABASE = {
-      crops: {
-        name: "Crops",
-        icon: "🌾",
-        reqs: { t1: 0, t2: 3, t3: 7 },
-        skills: [
-          // Tier 1
-          { id: "green_thumb", tier: 1, cost: 1, name: "Green Thumb", icon: "🌱", buffs: ["-5% plot crop growth time"], debuffs: [] },
-          { id: "young_farmer", tier: 1, cost: 1, name: "Young Farmer", icon: "🧑‍🌾", buffs: ["+0.1 Basic Crop yield"], debuffs: [] },
-          { id: "experienced_farmer", tier: 1, cost: 1, name: "Experienced Farmer", icon: "🚜", buffs: ["+0.1 Medium Crop yield"], debuffs: [] },
-          { id: "old_farmer", tier: 1, cost: 1, name: "Old Farmer", icon: "👴", buffs: ["+0.1 Advanced Crop yield"], debuffs: [] },
-          { id: "chonky_scarecrow", tier: 1, cost: 1, name: "Chonky Scarecrow", icon: "🎃", buffs: ["Increases Basic Scarecrow's AOE to a 7x7 area", "Additional -10% basic crop growth time"], debuffs: [] },
-          { id: "bettys_friend", tier: 1, cost: 1, name: "Betty's Friend", icon: "🪙", buffs: ["Betty Coin delivery revenue increased by 30%"], debuffs: [] },
-          // Tier 2
-          { id: "strong_roots", tier: 2, cost: 2, name: "Strong Roots", icon: "🥕", buffs: ["-10% Advanced crop growth time"], debuffs: [] },
-          { id: "coin_swindler", tier: 2, cost: 2, name: "Coin Swindler", icon: "💰", buffs: ["+10% coins when selling plot crops at the Market"], debuffs: [] },
-          { id: "golden_sunflower", tier: 2, cost: 2, name: "Golden Sunflower", icon: "🌻", buffs: ["1/700 chance for 0.35 gold when harvesting sunflowers (excl. Crop Machine)"], debuffs: [] },
-          { id: "horror_mike", tier: 2, cost: 2, name: "Horror Mike", icon: "👻", buffs: ["Increases Scary Mike's AOE to a 7x7 area", "Additional +0.1 medium crop yield"], debuffs: [] },
-          { id: "lauries_gains", tier: 2, cost: 2, name: "Laurie's Gains", icon: "🐦", buffs: ["Increases Laurie the Chuckle Crow's AOE to a 7x7 area", "Additional +0.1 advanced crop yield"], debuffs: [] },
-          // Tier 3
-          { id: "instant_growth", tier: 3, cost: 3, name: "Instant Growth", icon: "⚡", buffs: ["Grants ability to instantly harvest all currently growing crops in plots"], debuffs: [] },
-          { id: "acre_farm", tier: 3, cost: 3, name: "Acre Farm", icon: "🏡", buffs: ["+1 Advanced crop yield"], debuffs: ["-0.5 Basic and Medium crop yield"] },
-          { id: "hectare_farm", tier: 3, cost: 3, name: "Hectare Farm", icon: "🏞️", buffs: ["+1 Basic and Medium crop yield"], debuffs: ["-0.5 Advanced crop yield"] }
-        ]
-      },
-      trees: {
-        name: "Trees",
-        icon: "🌲",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "lumberjacks_extra", tier: 1, cost: 1, name: "Lumberjack's Extra", icon: "🪓", buffs: ["+0.1 wood yield"], debuffs: [] },
-          { id: "tree_charge", tier: 1, cost: 1, name: "Tree Charge", icon: "⏳", buffs: ["-10% tree growth time"], debuffs: [] },
-          { id: "more_axes", tier: 1, cost: 1, name: "More Axes", icon: "🪵", buffs: ["+50 axe stock"], debuffs: [] },
-          { id: "insta_chop", tier: 1, cost: 1, name: "Insta-Chop", icon: "⚡", buffs: ["1 Tap Trees"], debuffs: [] },
-          // Tier 2
-          { id: "tough_tree", tier: 2, cost: 2, name: "Tough Tree", icon: "🛡️", buffs: ["1/10 chance of x3 wood yield"], debuffs: [] },
-          { id: "fellers_discount", tier: 2, cost: 2, name: "Feller's Discount", icon: "🏷️", buffs: ["-20% axe coin cost"], debuffs: [] },
-          { id: "money_tree", tier: 2, cost: 2, name: "Money Tree", icon: "🪙", buffs: ["1% chance of finding 200 Coins when chopping trees"], debuffs: [] },
-          // Tier 3
-          { id: "tree_turnaround", tier: 3, cost: 3, name: "Tree Turnaround", icon: "🔄", buffs: ["15% chance for trees to grow instantly"], debuffs: [] },
-          { id: "tree_blitz", tier: 3, cost: 3, name: "Tree Blitz", icon: "🌟", buffs: ["Ability to make all trees instantly grow"], debuffs: [] }
-        ]
-      },
-      fishing: {
-        name: "Fishing",
-        icon: "🎣",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "fishermans_5_fold", tier: 1, cost: 1, name: "Fisherman's 5 Fold", icon: "🎏", buffs: ["+5 daily fishing reels"], debuffs: [] },
-          { id: "fishy_chance", tier: 1, cost: 1, name: "Fishy Chance", icon: "🐟", buffs: ["10% chance of +1 basic fish"], debuffs: [] },
-          { id: "fishy_roll", tier: 1, cost: 1, name: "Fishy Roll", icon: "🍣", buffs: ["10% chance of +1 advanced fish"], debuffs: [] },
-          { id: "reel_deal", tier: 1, cost: 1, name: "Reel Deal", icon: "🏷️", buffs: ["-50% rod coin cost"], debuffs: [] },
-          // Tier 2
-          { id: "fishermans_10_fold", tier: 2, cost: 2, name: "Fisherman's 10 Fold", icon: "🎣", buffs: ["+10 daily fishing reels"], debuffs: [] },
-          { id: "fishy_fortune", tier: 2, cost: 2, name: "Fishy Fortune", icon: "💰", buffs: ["+100% coins from Corale's deliveries"], debuffs: [] },
-          { id: "fishy_gamble", tier: 2, cost: 2, name: "Fishy Gamble", icon: "🎲", buffs: ["20% chance of +1 expert fish"], debuffs: [] },
-          // Tier 3
-          { id: "frenzied_fish", tier: 3, cost: 3, name: "Frenzied Fish", icon: "🦈", buffs: ["During fish frenzy, +1 fish and 50% chance of +1 fish"], debuffs: [] },
-          { id: "more_with_less", tier: 3, cost: 3, name: "More With Less", icon: "⚖️", buffs: ["+25 daily fishing reels"], debuffs: ["+1 Rod cost per cast"] },
-          { id: "fishy_feast", tier: 3, cost: 3, name: "Fishy Feast", icon: "🍲", buffs: ["+20% Bumpkin XP from Fish"], debuffs: [] }
-        ]
-      },
-      mining: {
-        name: "Mining",
-        icon: "⛏️",
-        reqs: { t1: 0, t2: 3, t3: 7 },
-        skills: [
-          // Tier 1
-          { id: "rock_n_roll", tier: 1, cost: 1, name: "Rock'N'Roll", icon: "🪨", buffs: ["+0.1 Stone Yield"], debuffs: [] },
-          { id: "iron_bumpkin", tier: 1, cost: 1, name: "Iron Bumpkin", icon: "⚙️", buffs: ["+0.1 Iron Yield"], debuffs: [] },
-          { id: "speed_miner", tier: 1, cost: 1, name: "Speed Miner", icon: "⏱️", buffs: ["-20% Stone recovery time"], debuffs: [] },
-          { id: "tap_prospector", tier: 1, cost: 1, name: "Tap Prospector", icon: "🔨", buffs: ["1 tap small mineral nodes"], debuffs: [] },
-          { id: "forge_ward_profits", tier: 1, cost: 1, name: "Forge-Ward Profits", icon: "🪙", buffs: ["+20% Blacksmith deliveries revenue"], debuffs: [] },
-          // Tier 2
-          { id: "iron_hustle", tier: 2, cost: 2, name: "Iron Hustle", icon: "⚡", buffs: ["-30% Iron recovery time"], debuffs: [] },
-          { id: "frugal_miner", tier: 2, cost: 2, name: "Frugal Miner", icon: "🏷️", buffs: ["-20% all pickaxes coin cost"], debuffs: [] },
-          { id: "rocky_favor", tier: 2, cost: 2, name: "Rocky Favor", icon: "⚖️", buffs: ["+1 Stone yield"], debuffs: ["-0.5 Iron yield"] },
-          { id: "fire_kissed", tier: 2, cost: 2, name: "Fire Kissed", icon: "🔥", buffs: ["+1 Crimstone yield on 5th consecutive mine"], debuffs: [] },
-          { id: "midas_sprint", tier: 2, cost: 2, name: "Midas Sprint", icon: "✨", buffs: ["-10% Gold recovery time"], debuffs: [] },
-          // Tier 3
-          { id: "ferrous_favor", tier: 3, cost: 3, name: "Ferrous Favor", icon: "🧲", buffs: ["+1 Iron yield"], debuffs: ["-0.5 Stone yield"] },
-          { id: "golden_touch", tier: 3, cost: 3, name: "Golden Touch", icon: "👑", buffs: ["+0.5 Gold Yield"], debuffs: [] },
-          { id: "more_picks", tier: 3, cost: 3, name: "More Picks", icon: "📦", buffs: ["Increased stock: +70 Pickaxe, +20 Stone Pickaxe, +7 Iron Pickaxe, +2 Gold Pickaxe"], debuffs: [] },
-          { id: "fireside_alchemist", tier: 3, cost: 3, name: "Fireside Alchemist", icon: "🧪", buffs: ["-15% Crimstone recovery time"], debuffs: [] },
-          { id: "midas_rush", tier: 3, cost: 3, name: "Midas Rush", icon: "🏆", buffs: ["-20% Gold recovery time"], debuffs: [] }
-        ]
-      },
-      cooking: {
-        name: "Cooking",
-        icon: "🍳",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "fast_feasts", tier: 1, cost: 1, name: "Fast Feasts", icon: "🍲", buffs: ["-10% Firepit and Kitchen cooking time"], debuffs: [] },
-          { id: "nom_nom", tier: 1, cost: 1, name: "Nom Nom", icon: "🍔", buffs: ["+10% Food deliveries revenue"], debuffs: [] },
-          { id: "munching_mastery", tier: 1, cost: 1, name: "Munching Mastery", icon: "⭐", buffs: ["+5% Bumpkin XP"], debuffs: [] },
-          { id: "swift_sizzle", tier: 1, cost: 1, name: "Swift Sizzle", icon: "🔥", buffs: ["-40% Fire Pit cooking time with oil"], debuffs: [] },
-          // Tier 2
-          { id: "frosted_cakes", tier: 2, cost: 2, name: "Frosted Cakes", icon: "🎂", buffs: ["-10% Cakes cooking time"], debuffs: [] },
-          { id: "juicy_boost", tier: 2, cost: 2, name: "Juicy Boost", icon: "🧃", buffs: ["+10% Bumpkin XP from drinks"], debuffs: [] },
-          { id: "turbo_fry", tier: 2, cost: 2, name: "Turbo Fry", icon: "🍟", buffs: ["-50% Kitchen cooking time with oil"], debuffs: [] },
-          { id: "drive_through_deli", tier: 2, cost: 2, name: "Drive-Through Deli", icon: "🥪", buffs: ["+15% Bumpkin XP from Deli"], debuffs: [] },
-          // Tier 3
-          { id: "instant_gratification", tier: 3, cost: 3, name: "Instant Gratification", icon: "⚡", buffs: ["Ability to make all meals currently cooking ready to be eaten"], debuffs: [] },
-          { id: "double_nom", tier: 3, cost: 3, name: "Double Nom", icon: "🍽️", buffs: ["+1 food from cooking"], debuffs: ["2x ingredients required for cooking"] },
-          { id: "fiery_jackpot", tier: 3, cost: 3, name: "Fiery Jackpot", icon: "🎰", buffs: ["+20% Chance of +1 food from Firepit"], debuffs: [] },
-          { id: "fry_frenzy", tier: 3, cost: 3, name: "Fry Frenzy", icon: "⚡", buffs: ["-60% Deli cooking time with oil"], debuffs: [] }
-        ]
-      },
-      compost: {
-        name: "Compost",
-        icon: "🪱",
-        reqs: { t1: 0, t2: 3, t3: 7 },
-        skills: [
-          // Tier 1
-          { id: "efficient_bin", tier: 1, cost: 1, name: "Efficient Bin", icon: "🗑️", buffs: ["+5 Sprout Mix"], debuffs: [] },
-          { id: "turbo_charged", tier: 1, cost: 1, name: "Turbo Charged", icon: "🧪", buffs: ["+5 Fruitful Blend"], debuffs: [] },
-          { id: "wormy_treat", tier: 1, cost: 1, name: "Wormy Treat", icon: "🪱", buffs: ["+1 Worm"], debuffs: [] },
-          { id: "feathery_business", tier: 1, cost: 1, name: "Feathery Business", icon: "🪶", buffs: ["Use feathers instead of eggs to boost composters"], debuffs: ["2x feathers to boost composters"] },
-          { id: "sprout_surge", tier: 1, cost: 1, name: "Sprout Surge", icon: "🌱", buffs: ["Put Sprout Mix on all plots"], debuffs: [] },
-          { id: "blend_tastic", tier: 1, cost: 1, name: "Blend-tastic", icon: "✨", buffs: ["Put Fruitful Blend on all plots"], debuffs: [] },
-          // Tier 2
-          { id: "premium_worms", tier: 2, cost: 2, name: "Premium Worms", icon: "👑", buffs: ["+10 Rapid Root"], debuffs: [] },
-          { id: "fruitful_bounty", tier: 2, cost: 2, name: "Fruitful Bounty", icon: "🍎", buffs: ["Double Fruitful Blend's Effect"], debuffs: [] },
-          { id: "swift_decomposer", tier: 2, cost: 2, name: "Swift Decomposer", icon: "⏳", buffs: ["-10% compost time"], debuffs: [] },
-          { id: "composting_bonanza", tier: 2, cost: 2, name: "Composting Bonanza", icon: "⏱️", buffs: ["Speed up composters by an additional hour when boosting"], debuffs: ["2x resources to boost composters"] },
-          { id: "root_rocket", tier: 2, cost: 2, name: "Root Rocket", icon: "🚀", buffs: ["Put Rapid Root on all plots"], debuffs: [] },
-          // Tier 3
-          { id: "composting_overhaul", tier: 3, cost: 3, name: "Composting Overhaul", icon: "📦", buffs: ["+2 Worms"], debuffs: [] },
-          { id: "composting_revamp", tier: 3, cost: 3, name: "Composting Revamp", icon: "⚗️", buffs: ["+5 fertilisers"], debuffs: ["-2 Worms"] }
-        ]
-      },
-      aging: {
-        name: "Aging",
-        icon: "🧂",
-        reqs: { t1: 0, t2: 3, t3: 7 },
-        skills: [
-          // Tier 1
-          { id: "cheap_rakes", tier: 1, cost: 1, name: "Cheap Rakes", icon: "🏷️", buffs: ["-20% salt rake coin cost"], debuffs: [] },
-          { id: "speedy_aging", tier: 1, cost: 1, name: "Speedy Aging", icon: "⏳", buffs: ["-10% Fish Aging time"], debuffs: [] },
-          { id: "salty_seas", tier: 1, cost: 1, name: "Salty Seas", icon: "🌊", buffs: ["-10% salt charge replenishment time"], debuffs: [] },
-          { id: "wide_rakes", tier: 1, cost: 1, name: "Wide Rakes", icon: "🧹", buffs: ["+2 Salt per harvest"], debuffs: [] },
-          { id: "bacalhau", tier: 1, cost: 1, name: "Bacalhau", icon: "🐟", buffs: ["+1 Bait yield from fermentation rack"], debuffs: [] },
-          // Tier 2
-          { id: "fish_smoking", tier: 2, cost: 2, name: "Fish Smoking", icon: "💨", buffs: ["Doubled chance Aged Fish becomes Prime Aged"], debuffs: [] },
-          { id: "refiner", tier: 2, cost: 2, name: "Refiner", icon: "💎", buffs: ["15% chance of +1 Refined Salt when making Refined Salt"], debuffs: [] },
-          { id: "sea_blessed", tier: 2, cost: 2, name: "Sea Blessed", icon: "✨", buffs: ["5% chance to restore 1 charge to 4 Salt Nodes on harvest"], debuffs: [] },
-          // Tier 3
-          { id: "ager", tier: 3, cost: 3, name: "Ager", icon: "🏛️", buffs: ["2× output from Aging Shed Racks"], debuffs: ["2× Aging Shed inputs (ingredients, fish & salt)"] },
-          { id: "salt_surge", tier: 3, cost: 3, name: "Salt Surge", icon: "⚡", buffs: ["Recharge all Salt Nodes to max"], debuffs: [] }
-        ]
-      },
-      fruit_patch: {
-        name: "Fruit Patch",
-        icon: "🍎",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "fruitful_fumble", tier: 1, cost: 1, name: "Fruitful Fumble", icon: "🍓", buffs: ["+0.1 Fruit Patch yield"], debuffs: [] },
-          { id: "fruity_heaven", tier: 1, cost: 1, name: "Fruity Heaven", icon: "🏷️", buffs: ["-10% Fruit Patch seeds cost"], debuffs: [] },
-          { id: "fruity_profit", tier: 1, cost: 1, name: "Fruity Profit", icon: "💰", buffs: ["+50% coins from Tango's deliveries"], debuffs: [] },
-          { id: "loyal_macaw", tier: 1, cost: 1, name: "Loyal Macaw", icon: "🦜", buffs: ["Double Macaw's effect"], debuffs: [] },
-          { id: "no_axe_no_worries", tier: 1, cost: 1, name: "No Axe No Worries", icon: "✂️", buffs: ["Chop fruit branches and stems without axes"], debuffs: ["-1 wood from fruit branches and stems"] },
-          // Tier 2
-          { id: "catchup", tier: 2, cost: 2, name: "Catchup", icon: "⏳", buffs: ["-10% Fruit Patch growth time"], debuffs: [] },
-          { id: "fruity_woody", tier: 2, cost: 2, name: "Fruity Woody", icon: "🪵", buffs: ["+1 wood from fruit branches and stems"], debuffs: [] },
-          { id: "pear_turbocharge", tier: 2, cost: 2, name: "Pear Turbocharge", icon: "🍐", buffs: ["Double Immortal Pear's effect"], debuffs: [] },
-          { id: "crime_fruit", tier: 2, cost: 2, name: "Crime Fruit", icon: "🍋", buffs: ["+10 Tomato and Lemon seeds stock"], debuffs: [] },
-          // Tier 3
-          { id: "generous_orchard", tier: 3, cost: 3, name: "Generous Orchard", icon: "🌳", buffs: ["20% chance of +1 Fruit Patch yield"], debuffs: [] },
-          { id: "long_pickings", tier: 3, cost: 3, name: "Long Pickings", icon: "🍌", buffs: ["-25% Apple and Banana growth time"], debuffs: ["+10% growth time for all other fruit patch fruits"] },
-          { id: "short_pickings", tier: 3, cost: 3, name: "Short Pickings", icon: "🫐", buffs: ["-25% Blueberry and Orange growth time"], debuffs: ["+10% growth time for all other fruit patch fruits"] },
-          { id: "zesty_vibes", tier: 3, cost: 3, name: "Zesty Vibes", icon: "🍊", buffs: ["+1 Tomato and Lemon yield"], debuffs: ["-0.25 yield for all other fruit patch fruits"] }
-        ]
-      },
-      animals: {
-        name: "Animals",
-        icon: "🐑",
-        reqs: { t1: 0, t2: 4, t3: 8 },
-        skills: [
-          // Tier 1
-          { id: "efficient_feeding", tier: 1, cost: 1, name: "Efficient Feeding", icon: "🌾", buffs: ["-5% feed to feed all animals"], debuffs: [] },
-          { id: "restless_animals", tier: 1, cost: 1, name: "Restless Animals", icon: "⏱️", buffs: ["-10% Animal sleep time"], debuffs: [] },
-          { id: "fine_fibers", tier: 1, cost: 1, name: "Fine Fibers", icon: "🧵", buffs: ["+0.1 Feather, Leather and Merino Wool yield"], debuffs: [] },
-          { id: "bountiful_bounties", tier: 1, cost: 1, name: "Bountiful Bounties", icon: "💰", buffs: ["+50% Coins from Animal Bounties"], debuffs: [] },
-          { id: "double_bale", tier: 1, cost: 1, name: "Double Bale", icon: "📦", buffs: ["Double Bale's Effect"], debuffs: [] },
-          { id: "bale_economy", tier: 1, cost: 1, name: "Bale Economy", icon: "🥛", buffs: ["Bale affects milk and wool production"], debuffs: [] },
-          { id: "featherweight", tier: 1, cost: 1, name: "Featherweight", icon: "🪶", buffs: ["+0.35 Feather yield"], debuffs: ["-0.1 Leather & Merino Wool yield"] },
-          // Tier 2
-          { id: "abundant_harvest", tier: 2, cost: 2, name: "Abundant Harvest", icon: "🥚", buffs: ["+0.2 Egg, Wool and Milk yield"], debuffs: [] },
-          { id: "heartwarming_instruments", tier: 2, cost: 2, name: "Heartwarming Instruments", icon: "🪕", buffs: ["+50% Animal XP from Animal Affection tools"], debuffs: [] },
-          { id: "kale_mix", tier: 2, cost: 2, name: "Kale Mix", icon: "🥬", buffs: ["Mixed Grain requires 3 kale to mix instead"], debuffs: [] },
-          { id: "alternate_medicine", tier: 2, cost: 2, name: "Alternate Medicine", icon: "🍯", buffs: ["Barn Delight requires 1 less Lemon and Honey to mix"], debuffs: [] },
-          { id: "healthy_livestock", tier: 2, cost: 2, name: "Healthy Livestock", icon: "💖", buffs: ["-50% chance of sickness"], debuffs: [] },
-          { id: "merino_whisperer", tier: 2, cost: 2, name: "Merino Whisperer", icon: "🐑", buffs: ["+0.35 Merino Wool yield"], debuffs: ["-0.1 Leather & Feather yield"] },
-          // Tier 3
-          { id: "clucky_grazing", tier: 3, cost: 3, name: "Clucky Grazing", icon: "🐔", buffs: ["-25% feed to feed Chickens"], debuffs: ["+50% feed to feed other animals"] },
-          { id: "sheepwise_diet", tier: 3, cost: 3, name: "Sheepwise Diet", icon: "🐏", buffs: ["-25% feed to feed Sheep"], debuffs: ["+50% feed to feed other animals"] },
-          { id: "cow_smart_nutrition", tier: 3, cost: 3, name: "Cow-Smart Nutrition", icon: "🐄", buffs: ["-25% feed to feed Cows"], debuffs: ["+50% feed to feed other animals"] },
-          { id: "chonky_feed", tier: 3, cost: 3, name: "Chonky Feed", icon: "🍖", buffs: ["2x animal xp from animal feed"], debuffs: ["+50% feed to feed all animals"] },
-          { id: "leathercraft_mastery", tier: 3, cost: 3, name: "Leathercraft Mastery", icon: "🥋", buffs: ["+0.35 Leather yield"], debuffs: ["-0.1 Feather & Merino Wool yield"] },
-          { id: "barnyard_rouse", tier: 3, cost: 3, name: "Barnyard Rouse", icon: "⚡", buffs: ["Instantly wakes up all animals"], debuffs: [] }
-        ]
-      },
-      bees_flowers: {
-        name: "Bees & Flowers",
-        icon: "🐝",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "sweet_bonus", tier: 1, cost: 1, name: "Sweet Bonus", icon: "🍯", buffs: ["+0.1 Honey per hive"], debuffs: [] },
-          { id: "hyper_bees", tier: 1, cost: 1, name: "Hyper Bees", icon: "⚡", buffs: ["+0.1 Honey production speed"], debuffs: [] },
-          { id: "blooming_boost", tier: 1, cost: 1, name: "Blooming Boost", icon: "🌸", buffs: ["-10% Flower growth time"], debuffs: [] },
-          { id: "flower_sale", tier: 1, cost: 1, name: "Flower Sale", icon: "🏷️", buffs: ["-20% Flower Seeds cost"], debuffs: [] },
-          // Tier 2
-          { id: "buzzworthy_treats", tier: 2, cost: 2, name: "Buzzworthy Treats", icon: "🥞", buffs: ["+10% Bumpkin XP from Honey Foods"], debuffs: [] },
-          { id: "blossom_bonding", tier: 2, cost: 2, name: "Blossom Bonding", icon: "💐", buffs: ["+2 relationship points for gifting flowers"], debuffs: [] },
-          { id: "pollen_power_up", tier: 2, cost: 2, name: "Pollen Power Up", icon: "🌼", buffs: ["Additional +0.1 crop yield after pollination (total +0.3)"], debuffs: [] },
-          { id: "petalled_perk", tier: 2, cost: 2, name: "Petalled Perk", icon: "🌺", buffs: ["10% chance of +1 Flower"], debuffs: [] },
-          // Tier 3
-          { id: "bee_collective", tier: 3, cost: 3, name: "Bee Collective", icon: "🐝", buffs: ["+20% Bee Swarm chance"], debuffs: [] },
-          { id: "flower_power", tier: 3, cost: 3, name: "Flower Power", icon: "🌻", buffs: ["-20% Flower growth time"], debuffs: [] },
-          { id: "flowery_abode", tier: 3, cost: 3, name: "Flowery Abode", icon: "🏡", buffs: ["+0.5 Honey production speed"], debuffs: ["+50% Flower growth time"] },
-          { id: "petal_blessed", tier: 3, cost: 3, name: "Petal Blessed", icon: "✨", buffs: ["Ability to make all flowers currently growing ready to be harvested"], debuffs: [] }
-        ]
-      },
-      greenhouse: {
-        name: "Greenhouse",
-        icon: "🏡",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "glass_room", tier: 1, cost: 1, name: "Glass Room", icon: "🪟", buffs: ["+0.1 Greenhouse produce yield"], debuffs: [] },
-          { id: "seedy_business", tier: 1, cost: 1, name: "Seedy Business", icon: "🏷️", buffs: ["-15% Greenhouse seeds cost"], debuffs: [] },
-          { id: "rice_and_shine", tier: 1, cost: 1, name: "Rice and Shine", icon: "🌾", buffs: ["-5% growth time for greenhouse produce"], debuffs: [] },
-          { id: "victorias_secretary", tier: 1, cost: 1, name: "Victoria's Secretary", icon: "🪙", buffs: ["+50% Coins from Victoria's deliveries"], debuffs: [] },
-          // Tier 2
-          { id: "olive_express", tier: 2, cost: 2, name: "Olive Express", icon: "🫒", buffs: ["-10% Olive growth time"], debuffs: [] },
-          { id: "rice_rocket", tier: 2, cost: 2, name: "Rice Rocket", icon: "🚀", buffs: ["-10% Rice growth time"], debuffs: [] },
-          { id: "vine_velocity", tier: 2, cost: 2, name: "Vine Velocity", icon: "🍇", buffs: ["-10% Grape growth time"], debuffs: [] },
-          { id: "seeded_bounty", tier: 2, cost: 2, name: "Seeded Bounty", icon: "🌿", buffs: ["+0.5 Greenhouse produce yield"], debuffs: ["+1 Greenhouse seed to plant"] },
-          // Tier 3
-          { id: "greenhouse_guru", tier: 3, cost: 3, name: "Greenhouse Guru", icon: "⚡", buffs: ["Ability to make all greenhouse produce currently growing ready to be harvested"], debuffs: [] },
-          { id: "greenhouse_gamble", tier: 3, cost: 3, name: "Greenhouse Gamble", icon: "🎲", buffs: ["25% chance of +1 greenhouse produce"], debuffs: [] },
-          { id: "slick_saver", tier: 3, cost: 3, name: "Slick Saver", icon: "🛢️", buffs: ["-1 Oil to grow greenhouse produce"], debuffs: [] },
-          { id: "greasy_plants", tier: 3, cost: 3, name: "Greasy Plants", icon: "🧪", buffs: ["+1 Greenhouse produce yield"], debuffs: ["+100% Oil consumption in greenhouse"] }
-        ]
-      },
-      machinery: {
-        name: "Machinery",
-        icon: "⚙️",
-        reqs: { t1: 0, t2: 2, t3: 5 },
-        skills: [
-          // Tier 1
-          { id: "crop_extension_1", tier: 1, cost: 1, name: "Crop Extension Module I", icon: "🔌", buffs: ["Allow Rhubarb and Zucchini seeds to be used in crop machine"], debuffs: [] },
-          { id: "crop_processor_unit", tier: 1, cost: 1, name: "Crop Processor Unit", icon: "⚙️", buffs: ["-5% Crop Machine growth time"], debuffs: ["+10% Oil consumption in Crop Machine"] },
-          { id: "oil_gadget", tier: 1, cost: 1, name: "Oil Gadget", icon: "🛢️", buffs: ["-10% Oil consumption in Crop Machine"], debuffs: [] },
-          { id: "oil_extraction", tier: 1, cost: 1, name: "Oil Extraction", icon: "⛽", buffs: ["+1 Oil when collecting from reserves"], debuffs: [] },
-          { id: "leak_proof_tank", tier: 1, cost: 1, name: "Leak-Proof Tank", icon: "🛡️", buffs: ["Triple oil tank capacity in crop machine"], debuffs: [] },
-          // Tier 2
-          { id: "crop_extension_2", tier: 2, cost: 2, name: "Crop Extension Module II", icon: "🥕", buffs: ["Allow Carrot and Cabbage seeds to be used in crop machine"], debuffs: [] },
-          { id: "crop_extension_3", tier: 2, cost: 2, name: "Crop Extension Module III", icon: "🥦", buffs: ["Allow Yam and Broccoli seeds to be used in crop machine"], debuffs: [] },
-          { id: "rapid_rig", tier: 2, cost: 2, name: "Rapid Rig", icon: "⚡", buffs: ["-20% Crop Machine growth time"], debuffs: ["+40% Oil consumption in Crop Machine"] },
-          { id: "oil_be_back", tier: 2, cost: 2, name: "Oil Be Back", icon: "⏱️", buffs: ["-20% Oil refill time"], debuffs: [] },
-          { id: "oil_rig", tier: 2, cost: 2, name: "Oil Rig", icon: "🏗️", buffs: ["Oil Drill requires 20 Wool instead of Leather to craft"], debuffs: [] },
-          // Tier 3
-          { id: "field_expansion_module", tier: 3, cost: 3, name: "Field Expansion Module", icon: "📦", buffs: ["+5 packs added to machine queue system"], debuffs: [] },
-          { id: "field_extension_module", tier: 3, cost: 3, name: "Field Extension Module", icon: "🚜", buffs: ["+5 plots added to machine"], debuffs: [] },
-          { id: "efficiency_extension_module", tier: 3, cost: 3, name: "Efficiency Extension Module", icon: "💡", buffs: ["-30% Oil consumption in Crop Machine"], debuffs: [] },
-          { id: "grease_lightning", tier: 3, cost: 3, name: "Grease Lightning", icon: "⚡", buffs: ["Ability to make empty oil wells instantly refill"], debuffs: [] }
-        ]
-      }
-    };
-
-    // --- State Storage ---
-    let currentCategoryKey = "crops";
-    let activeSkills = new Set(); // Set of skill IDs
-
-    // --- Web Audio Synthesizer Feedback ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playAudio(type) {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      const now = audioCtx.currentTime;
-      if (type === 'allocate') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-        osc.start(now);
-        osc.stop(now + 0.12);
-      } else if (type === 'refund') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(220, now + 0.09);
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-        osc.start(now);
-        osc.stop(now + 0.09);
-      } else if (type === 'tab') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(329.63, now);
-        gain.gain.setValueAtTime(0.06, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-        osc.start(now);
-        osc.stop(now + 0.06);
-      }
-    }
-
-    // --- Helper Calculations ---
-    function getCategoryPoints(catKey) {
-      const cat = SKILL_DATABASE[catKey];
-      let t1 = 0, t2 = 0, t3 = 0;
-      cat.skills.forEach(s => {
-        if (activeSkills.has(s.id)) {
-          if (s.tier === 1) t1 += s.cost;
-          if (s.tier === 2) t2 += s.cost;
-          if (s.tier === 3) t3 += s.cost;
-        }
-      });
-      return { t1, t2, t3, total: t1 + t2 + t3 };
-    }
-
-    function getTotalAllPoints() {
-      let total = 0;
-      Object.keys(SKILL_DATABASE).forEach(catKey => {
-        total += getCategoryPoints(catKey).total;
-      });
-      return total;
-    }
-
-    // --- Skill Selection Engine ---
-    function toggleSkill(skillId) {
-      const cat = SKILL_DATABASE[currentCategoryKey];
-      const skill = cat.skills.find(s => s.id === skillId);
-      if (!skill) return;
-
-      if (activeSkills.has(skillId)) {
-        // Revoking skill: Check if revoking breaks higher tier prerequisites
-        activeSkills.delete(skillId);
-        validateTierRequirements(currentCategoryKey);
-        playAudio('refund');
-      } else {
-        // Allocating skill: Check prerequisites
-        const points = getCategoryPoints(currentCategoryKey);
-        if (skill.tier === 2 && points.total < cat.reqs.t2) return;
-        if (skill.tier === 3 && points.total < cat.reqs.t3) return;
-
-        activeSkills.add(skillId);
-        playAudio('allocate');
-      }
-
-      render();
-    }
-
-    // Cascade refund higher tiers if requirements are broken
-    function validateTierRequirements(catKey) {
-      const cat = SKILL_DATABASE[catKey];
-      let points = getCategoryPoints(catKey);
-
-      // Check Tier 3 validity
-      if (points.total < cat.reqs.t3) {
-        cat.skills.filter(s => s.tier === 3).forEach(s => activeSkills.delete(s.id));
-      }
-      // Re-calculate and check Tier 2 validity
-      points = getCategoryPoints(catKey);
-      if (points.total < cat.reqs.t2) {
-        cat.skills.filter(s => s.tier === 2).forEach(s => activeSkills.delete(s.id));
-      }
-    }
-
-    function resetCurrentCategory() {
-      const cat = SKILL_DATABASE[currentCategoryKey];
-      cat.skills.forEach(s => activeSkills.delete(s.id));
-      playAudio('refund');
-      render();
-    }
-
-    function resetAllSkills() {
-      activeSkills.clear();
-      playAudio('refund');
-      render();
-    }
-
-    function setCategory(key) {
-      currentCategoryKey = key;
-      playAudio('tab');
-      render();
-    }
-
-    // --- Render Pipeline ---
-    function renderTabs() {
-      const nav = document.getElementById("category-tabs");
-      nav.innerHTML = Object.entries(SKILL_DATABASE).map(([key, cat]) => {
-        const isActive = key === currentCategoryKey;
-        const catPts = getCategoryPoints(key).total;
-        return `
-          <button onclick="setCategory('${key}')" class="px-4 py-2.5 rounded-xl border flex items-center gap-2.5 whitespace-nowrap text-xs font-bold transition-all ${
-            isActive
-              ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)]'
-              : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200'
-          }">
-            <span class="text-base">${cat.icon}</span>
-            <span>${cat.name}</span>
-            ${catPts > 0 ? `<span class="px-1.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/50 text-[9px] font-pixel text-amber-300">${catPts}</span>` : ''}
-          </button>
-        `;
-      }).join('');
-    }
-
-    function renderTierGrid(tierNum, elementId) {
-      const cat = SKILL_DATABASE[currentCategoryKey];
-      const tierSkills = cat.skills.filter(s => s.tier === tierNum);
-      const points = getCategoryPoints(currentCategoryKey);
-      const req = cat.reqs[`t${tierNum}`];
-      const isUnlocked = points.total >= req;
-
-      const container = document.getElementById(elementId);
-      container.innerHTML = tierSkills.map(skill => {
-        const isAllocated = activeSkills.has(skill.id);
-        let cardClass = isAllocated ? "card-unlocked" : (isUnlocked ? "card-available" : "card-locked");
-
-        return `
-          <div onclick="toggleSkill('${skill.id}')" class="${cardClass} p-4 rounded-xl cursor-pointer transition-all duration-200 flex flex-col justify-between select-none relative group min-h-[140px]">
-            <div>
-              <div class="flex items-start justify-between gap-2 mb-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-2xl">${skill.icon}</span>
-                  <div>
-                    <h3 class="font-rune font-bold text-xs ${isAllocated ? 'text-amber-200' : 'text-slate-100'}">${skill.name}</h3>
-                    <span class="text-[9px] font-pixel text-amber-400/80">${skill.cost} PTS</span>
-                  </div>
-                </div>
-                ${isAllocated 
-                  ? `<span class="px-2 py-0.5 rounded bg-amber-400 text-black text-[9px] font-pixel shadow">ON</span>` 
-                  : `<span class="text-[9px] font-pixel text-slate-500">${isUnlocked ? 'LEARN' : 'LOCKED'}</span>`
-                }
-              </div>
-
-              <!-- Buffs / Debuffs description -->
-              <div class="space-y-1 mt-2">
-                ${skill.buffs.map(b => `<p class="text-[11px] text-emerald-400/90 font-medium leading-tight">• ${b}</p>`).join('')}
-                ${skill.debuffs.map(d => `<p class="text-[11px] text-rose-400 font-medium leading-tight">• ${d}</p>`).join('')}
-              </div>
-            </div>
-
-            <div class="text-[9px] font-pixel text-slate-500 text-right mt-3">
-              ${isAllocated ? 'CLICK TO REFUND' : (isUnlocked ? 'CLICK TO ALLOCATE' : `REQ ${req} PTS`)}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderSummary() {
-      const cat = SKILL_DATABASE[currentCategoryKey];
-      const points = getCategoryPoints(currentCategoryKey);
-
-      // HUD points
-      document.getElementById('hud-total-points').innerText = `${getTotalAllPoints()} pts`;
-      document.getElementById('hud-cat-points').innerText = `${points.total} pts`;
-
-      // Status labels for tiers
-      document.getElementById('tier-1-status').innerText = `UNLOCKED (${points.t1}/${cat.reqs.t1})`;
-      document.getElementById('tier-2-status').innerText = `${points.total >= cat.reqs.t2 ? 'UNLOCKED' : 'LOCKED'} (${points.t2}/${cat.reqs.t2} Req)`;
-      document.getElementById('tier-3-status').innerText = `${points.total >= cat.reqs.t3 ? 'UNLOCKED' : 'LOCKED'} (${points.t3}/${cat.reqs.t3} Req)`;
-
-      // Tier Breakdown side-panel
-      document.getElementById('summary-t1').innerText = points.t1;
-      document.getElementById('summary-t2').innerText = points.t2;
-      document.getElementById('summary-t3').innerText = points.t3;
-
-      // Compile all active buffs & debuffs across all selected skills
-      let buffs = [];
-      let debuffs = [];
-
-      Object.values(SKILL_DATABASE).forEach(c => {
-        c.skills.forEach(s => {
-          if (activeSkills.has(s.id)) {
-            s.buffs.forEach(b => buffs.push({ text: b, icon: s.icon, name: s.name }));
-            s.debuffs.forEach(d => debuffs.push({ text: d, icon: s.icon, name: s.name }));
-          }
-        });
-      });
-
-      const buffsEl = document.getElementById('buffs-list');
-      if (buffs.length === 0) {
-        buffsEl.innerHTML = `<div class="text-xs text-slate-500 italic p-3 rounded-lg bg-slate-900/50 border border-slate-800/60">No buffs selected.</div>`;
-      } else {
-        buffsEl.innerHTML = buffs.map(b => `
-          <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-500/20 flex items-start gap-2">
-            <span class="text-sm">${b.icon}</span>
-            <div>
-              <div class="text-[10px] font-pixel text-emerald-300/80 mb-0.5">${b.name}</div>
-              <div class="text-xs text-emerald-300 font-medium">${b.text}</div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const debuffsEl = document.getElementById('debuffs-list');
-      if (debuffs.length === 0) {
-        debuffsEl.innerHTML = `<div class="text-xs text-slate-500 italic p-3 rounded-lg bg-slate-900/50 border border-slate-800/60">No debuffs selected.</div>`;
-      } else {
-        debuffsEl.innerHTML = debuffs.map(d => `
-          <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-500/20 flex items-start gap-2">
-            <span class="text-sm">${d.icon}</span>
-            <div>
-              <div class="text-[10px] font-pixel text-rose-300/80 mb-0.5">${d.name}</div>
-              <div class="text-xs text-rose-300 font-medium">${d.text}</div>
-            </div>
-          </div>
-        `).join('');
-      }
-    }
-
-    function render() {
-      renderTabs();
-      renderTierGrid(1, "tier-1-grid");
-      renderTierGrid(2, "tier-2-grid");
-      renderTierGrid(3, "tier-3-grid");
-      renderSummary();
-    }
-
-    // --- Build Export System ---
-    function exportBuildLink() {
-      const exportArr = Array.from(activeSkills);
-      const encoded = btoa(JSON.stringify(exportArr));
-      const url = new URL(window.location.href);
-      url.searchParams.set("build", encoded);
-      navigator.clipboard.writeText(url.href);
-
-      const toast = document.getElementById("toast-msg");
-      toast.style.opacity = "1";
-      playAudio('allocate');
-      setTimeout(() => { toast.style.opacity = "0"; }, 2200);
-    }
-
-    function loadBuildFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      const build = params.get("build");
-      if (build) {
-        try {
-          const decoded = JSON.parse(atob(build));
-          if (Array.isArray(decoded)) {
-            activeSkills = new Set(decoded);
-          }
-        } catch (e) {
-          console.error("Invalid build string", e);
-        }
-      }
-    }
-
-    // --- Ambient Floating Particle Canvas ---
-    const canvas = document.getElementById('star-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Spore {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.4 - 0.2;
-        this.speedY = -(Math.random() * 0.35 + 0.1);
-        this.alpha = Math.random() * 0.6 + 0.2;
-        this.hue = Math.random() > 0.4 ? 42 : 160;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.y < 0 || this.x < 0 || this.x > canvas.width) this.reset();
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue}, 90%, 65%, ${this.alpha})`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = `hsl(${this.hue}, 90%, 50%)`;
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < 45; i++) particles.push(new Spore());
-    function loop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    // Initial Execution
-    loadBuildFromURL();
-    render();
-  </script>
+  <!-- Scripts Loaded Sequentially -->
+  <script src="skillsData.js"></script>
+  <script src="canvas.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
