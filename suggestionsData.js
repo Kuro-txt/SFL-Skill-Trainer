@@ -1,0 +1,66 @@
+const SUGGESTIONS_DATABASE = {
+  crops: [
+    {
+      id: "crop_speedrunner",
+      title: "Max Growth Speedrun",
+      tag: "SPEED",
+      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+      description: "Optimized for active plot rotation, instant harvests, and maximum crop turnaround times.",
+      skills: ["green_thumb", "chonky_scarecrow", "strong_roots", "instant_growth"]
+    },
+    {
+      id: "crop_yield_heavy",
+      title: "Basic & Medium Bulk Yield",
+      tag: "BULK YIELD",
+      badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
+      description: "Maximizes low-tier crop outputs for deliveries, animal feeds, and cooking supplies.",
+      skills: ["young_farmer", "experienced_farmer", "horror_mike", "hectare_farm"]
+    },
+    {
+      id: "crop_delivery_coins",
+      title: "Betty's Market Tycoon",
+      tag: "COINS",
+      badgeColor: "text-sky-400 border-sky-400/30 bg-sky-400/10",
+      description: "Focuses on maximizing coin profits from plot crop deliveries and market selling.",
+      skills: ["bettys_friend", "coin_swindler", "golden_sunflower"]
+    }
+  ],
+  trees: [
+    {
+      id: "tree_insta_logger",
+      title: "Rapid Wood Harvester",
+      tag: "SPEED",
+      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+      description: "Tap-chops trees instantly with quick turnaround resets.",
+      skills: ["lumberjacks_extra", "tree_charge", "insta_chop", "tough_tree", "tree_turnaround"]
+    }
+  ],
+  fishing: [
+    {
+      id: "master_angler",
+      title: "Deep Sea XP & Rare Catch",
+      tag: "XP / SPEC",
+      badgeColor: "text-purple-400 border-purple-400/30 bg-purple-400/10",
+      description: "Expands daily reel count and boosts expert fish drop rates with XP bonuses.",
+      skills: ["fishermans_5_fold", "fishy_roll", "fishermans_10_fold", "fishy_gamble", "fishy_feast"]
+    }
+  ],
+  mining: [
+    {
+      id: "crimstone_iron_rusher",
+      title: "Node Rusher",
+      tag: "MINING",
+      badgeColor: "text-rose-400 border-rose-400/30 bg-rose-400/10",
+      description: "Reduces Iron/Gold node cooldowns and maximizes Crimstone streaks.",
+      skills: ["rock_n_roll", "iron_bumpkin", "speed_miner", "iron_hustle", "fire_kissed", "ferrous_favor"]
+    }
+  ],
+  cooking: [],
+  compost: [],
+  aging: [],
+  fruit_patch: [],
+  animals: [],
+  bees_flowers: [],
+  greenhouse: [],
+  machinery: []
+};
