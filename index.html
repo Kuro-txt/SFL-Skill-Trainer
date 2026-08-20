@@ -2,204 +2,242 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sunflower Land — Skill Matrix</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="min-h-screen flex flex-col items-center p-2 selection:bg-amber-400 selection:text-black">
+<body class="p-3 sm:p-5 flex flex-col items-center selection:bg-amber-400 selection:text-black">
 
-  <div class="max-w-4xl w-full flex flex-col gap-2">
+  <div class="max-w-6xl w-full flex flex-col gap-3">
     
-    <!-- Ultra-Compact Mobile Header -->
-    <header class="card-glass rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🌻</span>
-        <h1 class="font-display text-xs font-bold tracking-tight text-white">SFL SKILLS</h1>
+    <!-- Top HUD Header -->
+    <header class="card-glass rounded-2xl p-3.5 sm:p-4 flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 flex items-center justify-center text-xl shadow-[0_0_18px_rgba(245,158,11,0.3)] flex-shrink-0">
+            🌻
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-display text-sm sm:text-base font-bold tracking-tight text-white leading-none">SUNFLOWER LAND</h1>
+              <span class="px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 text-[8px] font-pixel text-amber-400">MATRIX</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium">Bumpkin Talent & Ascension Planner</p>
+          </div>
+        </div>
+
+        <!-- Mobile Points Badges -->
+        <div class="flex md:hidden items-center gap-1.5">
+          <div class="card-sub px-2 py-1 rounded-lg text-center">
+            <span id="hud-mobile-points" class="font-display font-bold text-xs text-amber-400">0p</span>
+          </div>
+          <div class="card-sub px-2 py-1 rounded-lg text-center border-cyan-500/20">
+            <span id="hud-mobile-shards" class="font-display font-bold text-xs text-cyan-300">0🔷</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Farm ID Search & Actions -->
-      <div class="flex items-center gap-1.5 flex-grow justify-end">
-        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900/90 rounded-lg border border-slate-700/80 p-0.5 max-w-[170px] w-full">
-          <span class="pl-1.5 text-slate-500 text-[10px]">#</span>
+      <!-- Action & Farm Sync Toolbar -->
+      <div class="flex items-center gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap justify-end">
+        
+        <!-- Farm ID Fetcher -->
+        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900/90 rounded-xl border border-slate-700/80 p-0.5 flex-grow sm:flex-grow-0 focus-within:border-amber-400 focus-within:ring-1 focus-within:ring-amber-400/40 transition-all">
+          <span class="pl-2 text-slate-500 text-xs font-semibold">#</span>
           <input 
             id="farm-id-input" 
             type="number" 
-            placeholder="Farm ID" 
-            class="w-full px-1.5 py-0.5 bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            placeholder="Farm ID..." 
+            class="w-full sm:w-28 px-2 py-1 bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             required 
           />
-          <button id="fetch-btn" type="submit" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px] whitespace-nowrap">
+          <button 
+            id="fetch-btn" 
+            type="submit" 
+            class="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-[11px] font-bold text-emerald-300 transition active:scale-95 cursor-pointer whitespace-nowrap"
+          >
             Sync
           </button>
         </form>
 
-        <button type="button" onclick="openSuggestionsModal()" class="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/40 text-[10px] font-bold text-amber-300 whitespace-nowrap">
-          Presets
+        <!-- Desktop Total Badges -->
+        <div class="hidden md:flex items-center gap-2">
+          <div class="card-sub px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 text-xs">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold">Total</span>
+            <span id="hud-total-points" class="font-display font-bold text-amber-400">0 pts</span>
+          </div>
+          <div class="card-sub px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 text-xs border-cyan-500/20">
+            <span class="text-[10px] text-cyan-400 font-semibold">🔷</span>
+            <span id="hud-total-shards" class="font-display font-bold text-cyan-300">0</span>
+          </div>
+        </div>
+
+        <button type="button" onclick="openSuggestionsModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-[11px] font-bold text-amber-300 flex items-center gap-1.5 transition active:scale-95 cursor-pointer whitespace-nowrap">
+          <span>💡</span> Presets
         </button>
 
-        <button type="button" onclick="resetCurrentCategory()" class="btn-secondary px-2 py-1 rounded-lg text-[10px] font-semibold text-slate-300">
-          Reset
+        <button type="button" onclick="resetCurrentCategory()" class="btn-secondary px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-slate-300 cursor-pointer whitespace-nowrap">
+          Reset Tab
+        </button>
+
+        <button type="button" onclick="resetAllSkills()" class="btn-danger px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-rose-300 cursor-pointer whitespace-nowrap">
+          Reset All
         </button>
       </div>
     </header>
 
-    <!-- Category Pill Carousel (Horizontal Scroll) -->
-    <nav id="category-tabs" class="flex gap-1 overflow-x-auto pb-1 scrollbar-none"></nav>
+    <!-- Category Pill Horizontal Navigation -->
+    <nav id="category-tabs" class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none"></nav>
 
-    <!-- Tier Filter Tabs (Prevents Long Scrolling) -->
-    <div class="flex items-center justify-between gap-1 card-sub p-1 rounded-xl">
-      <div id="tier-filter-buttons" class="flex gap-1">
-        <button type="button" onclick="setTierFilter('all')" id="filter-all" class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition bg-amber-400/20 text-amber-300">
-          All Tiers
-        </button>
-        <button type="button" onclick="setTierFilter(1)" id="filter-1" class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition text-slate-400 hover:text-white">
-          Tier 1
-        </button>
-        <button type="button" onclick="setTierFilter(2)" id="filter-2" class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition text-slate-400 hover:text-white">
-          Tier 2
-        </button>
-        <button type="button" onclick="setTierFilter(3)" id="filter-3" class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition text-slate-400 hover:text-white">
-          Tier 3
-        </button>
-      </div>
-      <span id="tab-tier-summary" class="text-[9px] font-pixel text-slate-400 pr-1.5">0 pts</span>
-    </div>
-
-    <!-- Main Workspace (Dynamic Tier Sections) -->
-    <main class="flex flex-col gap-2">
-      <!-- Tier 1 Section -->
-      <section id="tier-1-section" class="card-glass rounded-xl p-2.5 flex flex-col gap-1.5">
-        <div class="flex items-center justify-between pb-1 border-b border-slate-800/80">
-          <span class="px-1.5 py-0.2 rounded bg-emerald-500/10 border border-emerald-500/30 text-[8px] font-pixel text-emerald-400">TIER 1</span>
-          <span id="tier-1-status" class="text-[8px] font-pixel text-emerald-400">0 PTS</span>
-        </div>
-        <div id="tier-1-grid" class="grid grid-cols-2 gap-1.5"></div>
-      </section>
-
-      <!-- Tier 2 Section -->
-      <section id="tier-2-section" class="card-glass rounded-xl p-2.5 flex flex-col gap-1.5">
-        <div class="flex flex-col gap-1 pb-1 border-b border-slate-800/80">
-          <div class="flex items-center justify-between">
-            <span class="px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30 text-[8px] font-pixel text-amber-400">TIER 2</span>
-            <span id="tier-2-status" class="text-[8px] font-pixel text-slate-400">0/3 REQ</span>
-          </div>
-          <div class="w-full h-1 rounded-full bg-slate-900 overflow-hidden">
-            <div id="tier-2-progress" class="h-full bg-amber-400 transition-all duration-200" style="width: 0%;"></div>
-          </div>
-        </div>
-        <div id="tier-2-grid" class="grid grid-cols-2 gap-1.5"></div>
-      </section>
-
-      <!-- Tier 3 Section -->
-      <section id="tier-3-section" class="card-glass rounded-xl p-2.5 flex flex-col gap-1.5">
-        <div class="flex flex-col gap-1 pb-1 border-b border-slate-800/80">
-          <div class="flex items-center justify-between">
-            <span class="px-1.5 py-0.2 rounded bg-purple-500/10 border border-purple-500/30 text-[8px] font-pixel text-purple-400">TIER 3</span>
-            <span id="tier-3-status" class="text-[8px] font-pixel text-slate-400">0/7 REQ</span>
-          </div>
-          <div class="w-full h-1 rounded-full bg-slate-900 overflow-hidden">
-            <div id="tier-3-progress" class="h-full bg-purple-400 transition-all duration-200" style="width: 0%;"></div>
-          </div>
-        </div>
-        <div id="tier-3-grid" class="grid grid-cols-2 gap-1.5"></div>
-      </section>
-    </main>
-
-  </div>
-
-  <!-- Sticky Bottom Mobile App Dock -->
-  <div class="fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 border-t border-slate-800/80 backdrop-blur-md p-2 flex justify-center">
-    <div class="max-w-4xl w-full flex items-center justify-between gap-2">
+    <!-- Main Responsive Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-start">
       
-      <!-- Investment Summary Badges -->
-      <div class="flex items-center gap-1.5">
-        <div class="card-sub px-2 py-1 rounded-lg flex items-center gap-1">
-          <span class="text-[9px] text-slate-400 uppercase">Pts</span>
-          <span id="dock-points" class="font-display font-bold text-xs text-amber-400">0</span>
+      <!-- Skills Matrix (Left 3 Columns) -->
+      <main class="lg:col-span-3 flex flex-col gap-3">
+        
+        <!-- Tier 1 -->
+        <section class="card-glass rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-[9px] font-pixel text-emerald-400">TIER 1</span>
+              <span class="text-xs font-semibold text-slate-300">Apprentice Skills</span>
+            </div>
+            <span id="tier-1-status" class="text-[9px] font-pixel text-emerald-400">0 PTS</span>
+          </div>
+          <div id="tier-1-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5"></div>
+        </section>
+
+        <!-- Tier 2 -->
+        <section class="card-glass rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2.5">
+          <div class="flex flex-col gap-1.5 border-b border-slate-800/80 pb-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-[9px] font-pixel text-amber-400">TIER 2</span>
+                <span class="text-xs font-semibold text-slate-300">Journeyman Skills</span>
+              </div>
+              <span id="tier-2-status" class="text-[9px] font-pixel text-slate-400">0/3 REQ</span>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+              <div id="tier-2-progress" class="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-200" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div id="tier-2-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5"></div>
+        </section>
+
+        <!-- Tier 3 -->
+        <section class="card-glass rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2.5">
+          <div class="flex flex-col gap-1.5 border-b border-slate-800/80 pb-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/30 text-[9px] font-pixel text-purple-400">TIER 3</span>
+                <span class="text-xs font-semibold text-slate-300">Master Apex Skills</span>
+              </div>
+              <span id="tier-3-status" class="text-[9px] font-pixel text-slate-400">0/7 REQ</span>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+              <div id="tier-3-progress" class="h-full bg-gradient-to-r from-purple-500 to-purple-300 transition-all duration-200" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div id="tier-3-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5"></div>
+        </section>
+
+      </main>
+
+      <!-- Sidebar Summary (Right Column / Stacked cleanly on mobile) -->
+      <aside class="card-glass rounded-2xl p-4 sticky top-4 flex flex-col gap-3">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2.5">
+            <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-display">Tab Summary</h2>
+            <span class="text-amber-400 text-xs">⚡</span>
+          </div>
+
+          <!-- Points & Shards Investment -->
+          <div class="grid grid-cols-2 gap-2 mb-2.5">
+            <div class="card-sub p-2 rounded-xl text-center">
+              <div class="text-[8px] text-slate-500 font-bold uppercase">Points</div>
+              <div id="tab-summary-points" class="font-display font-bold text-sm text-amber-400">0</div>
+            </div>
+            <div class="card-sub p-2 rounded-xl text-center border-cyan-500/20">
+              <div class="text-[8px] text-cyan-400 font-bold uppercase">🔷 Shards</div>
+              <div id="tab-summary-shards" class="font-display font-bold text-sm text-cyan-300">0</div>
+            </div>
+          </div>
+
+          <!-- Tier Breakdown -->
+          <div class="grid grid-cols-3 gap-1.5 mb-3">
+            <div class="card-sub p-1.5 rounded-lg text-center">
+              <div class="text-[8px] text-slate-500 font-bold uppercase">T1</div>
+              <div id="summary-t1" class="font-display font-bold text-xs text-emerald-400">0p</div>
+            </div>
+            <div class="card-sub p-1.5 rounded-lg text-center">
+              <div class="text-[8px] text-slate-500 font-bold uppercase">T2</div>
+              <div id="summary-t2" class="font-display font-bold text-xs text-amber-400">0p</div>
+            </div>
+            <div class="card-sub p-1.5 rounded-lg text-center">
+              <div class="text-[8px] text-slate-500 font-bold uppercase">T3</div>
+              <div id="summary-t3" class="font-display font-bold text-xs text-purple-400">0p</div>
+            </div>
+          </div>
+
+          <!-- Active Buffs -->
+          <div class="space-y-1 mb-2.5">
+            <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active Buffs
+            </span>
+            <div id="buffs-list" class="max-h-40 overflow-y-auto space-y-1.5 pr-0.5 text-xs"></div>
+          </div>
+
+          <!-- Active Debuffs -->
+          <div class="space-y-1">
+            <span class="text-[9px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Tradeoffs
+            </span>
+            <div id="debuffs-list" class="max-h-32 overflow-y-auto space-y-1.5 pr-0.5 text-xs"></div>
+          </div>
         </div>
-        <div class="card-sub px-2 py-1 rounded-lg flex items-center gap-1 border-cyan-500/20">
-          <span class="text-[9px] text-cyan-400">🔷</span>
-          <span id="dock-shards" class="font-display font-bold text-xs text-cyan-300">0</span>
+
+        <div class="pt-2.5 border-t border-slate-800/80">
+          <button type="button" onclick="exportBuildLink()" class="btn-primary w-full py-2.5 rounded-xl text-slate-950 font-display font-bold text-xs cursor-pointer shadow-lg">
+            Copy Build Link
+          </button>
         </div>
-      </div>
+      </aside>
 
-      <!-- Actions -->
-      <div class="flex items-center gap-1.5">
-        <button type="button" onclick="openStatsDrawer()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-slate-200 flex items-center gap-1 cursor-pointer">
-          <span>📊</span> Stats
-        </button>
-        <button type="button" onclick="exportBuildLink()" class="btn-primary px-3 py-1.5 rounded-lg text-slate-950 font-display font-bold text-[11px] cursor-pointer">
-          Share
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Slide-Up Stats & Buffs Drawer -->
-  <div id="drawer-backdrop" onclick="closeStatsDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden"></div>
-  <div id="stats-drawer" class="fixed bottom-0 inset-x-0 z-50 bg-slate-900 border-t border-slate-700 rounded-t-2xl p-3.5 max-w-lg mx-auto flex flex-col gap-2.5 max-h-[80vh]">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-      <div class="flex items-center gap-2">
-        <span class="text-amber-400">⚡</span>
-        <h3 class="font-display font-bold text-xs text-white uppercase tracking-wide">Active Tab Perks</h3>
-      </div>
-      <button type="button" onclick="closeStatsDrawer()" class="w-6 h-6 rounded bg-slate-800 text-slate-400 text-xs flex items-center justify-center cursor-pointer">✕</button>
-    </div>
-
-    <!-- Tier Breakdown -->
-    <div class="grid grid-cols-3 gap-1.5 text-center">
-      <div class="card-sub p-1.5 rounded">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">Tier 1</div>
-        <div id="summary-t1" class="font-display font-bold text-xs text-emerald-400">0p</div>
-      </div>
-      <div class="card-sub p-1.5 rounded">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">Tier 2</div>
-        <div id="summary-t2" class="font-display font-bold text-xs text-amber-400">0p</div>
-      </div>
-      <div class="card-sub p-1.5 rounded">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">Tier 3</div>
-        <div id="summary-t3" class="font-display font-bold text-xs text-purple-400">0p</div>
-      </div>
-    </div>
-
-    <!-- Active Buffs -->
-    <div class="space-y-1">
-      <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">▲ Buffs</span>
-      <div id="buffs-list" class="max-h-36 overflow-y-auto space-y-1 pr-0.5 text-[11px]"></div>
-    </div>
-
-    <!-- Active Debuffs -->
-    <div class="space-y-1">
-      <span class="text-[9px] font-bold text-rose-400 uppercase tracking-wider">▼ Tradeoffs</span>
-      <div id="debuffs-list" class="max-h-24 overflow-y-auto space-y-1 pr-0.5 text-[11px]"></div>
     </div>
   </div>
 
   <!-- Multi-Tab Presets Modal -->
-  <div id="suggestions-modal" onclick="onModalBackdropClick(event)" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 p-2.5" style="display: none;">
-    <div class="max-w-md w-full mx-auto my-auto card-glass border border-slate-700/80 rounded-xl p-3 shadow-2xl flex flex-col gap-2.5">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-        <div class="flex items-center gap-1.5">
-          <span class="text-lg">💡</span>
-          <h3 class="font-display font-bold text-xs text-white">Recommended Builds</h3>
+  <div id="suggestions-modal" onclick="onModalBackdropClick(event)" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 p-3" style="display: none;">
+    <div class="max-w-xl w-full mx-auto my-auto card-glass border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col gap-3">
+      
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💡</span>
+          <div>
+            <h3 class="font-display font-bold text-sm text-white">Recommended Builds</h3>
+            <p class="text-[11px] text-slate-400">Explore community builds across categories</p>
+          </div>
         </div>
-        <button type="button" onclick="closeSuggestionsModal()" class="w-6 h-6 rounded bg-slate-800 text-slate-400 text-xs flex items-center justify-center cursor-pointer">✕</button>
+        <button type="button" onclick="closeSuggestionsModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs flex items-center justify-center cursor-pointer transition">✕</button>
       </div>
 
-      <div id="modal-category-tabs" class="flex gap-1 overflow-x-auto pb-1 border-b border-slate-800/60 scrollbar-none"></div>
-      <div id="suggestions-list" class="max-h-[50vh] overflow-y-auto space-y-1.5 pr-0.5"></div>
+      <!-- Presets Category Pills -->
+      <div id="modal-category-tabs" class="flex gap-1.5 overflow-x-auto pb-1.5 border-b border-slate-800/60 scrollbar-none"></div>
+
+      <!-- Presets List -->
+      <div id="suggestions-list" class="max-h-[55vh] overflow-y-auto space-y-2.5 pr-0.5"></div>
     </div>
   </div>
 
   <!-- Toast -->
-  <div id="toast-notification" class="fixed top-3 inset-x-0 mx-auto w-fit z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold">
+  <div id="toast-notification" class="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold">
     <span>✓</span>
-    <span id="toast-text">Build copied!</span>
+    <span id="toast-text">Build link copied!</span>
   </div>
 
   <!-- Module Scripts -->
