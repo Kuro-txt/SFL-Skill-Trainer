@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunflower Land Skill Trainer</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Pixel & Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-ui: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background-color: #0b111e;
+      overflow-x: hidden;
+    }
+
+    .font-pixel {
+      font-family: var(--font-pixel);
+    }
+
+    /* Retro RPG 9-Slice Style Borders */
+    .rpg-panel {
+      background: linear-gradient(180deg, #2b1f1d 0%, #1a1211 100%);
+      border: 4px solid #d4a359;
+      box-shadow: 
+        inset 0 0 0 2px #543d2b,
+        0 8px 24px rgba(0, 0, 0, 0.7);
+    }
+
+    .rpg-panel-sub {
+      background: #140d0c;
+      border: 2px solid #543d2b;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+    }
+
+    /* Skill Node Glows */
+    .node-active {
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.6), inset 0 0 8px rgba(250, 204, 21, 0.4);
+      border-color: #facc15;
+    }
+
+    .node-locked {
+      filter: grayscale(0.8) brightness(0.6);
+      border-color: #3f3f46;
+    }
+
+    /* Custom Scanline Grid Overlay */
+    .grid-overlay {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 relative selection:bg-amber-500 selection:text-black">
+
+  <!-- Ambient Particle Canvas -->
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+  
+  <!-- Subtle Grid Backdrop -->
+  <div class="fixed inset-0 grid-overlay pointer-events-none z-0"></div>
+
+  <!-- Main Container -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 flex flex-col min-h-screen">
+    
+    <!-- Top Bar / Header -->
+    <header class="rpg-panel rounded-xl p-4 md:p-6 mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-lg bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-2xl shadow-inner">
+          🌻
+        </div>
+        <div>
+          <h1 class="text-xs sm:text-sm font-pixel text-amber-400 tracking-wider">SUNFLOWER LAND</h1>
+          <p class="text-xs text-amber-200/60 font-medium">Bumpkin Skill Tree Architect</p>
+        </div>
+      </div>
+
+      <!-- Point Pool & Level Counters -->
+      <div class="flex items-center gap-3 md:gap-6 flex-wrap">
+        <div class="rpg-panel-sub px-4 py-2 rounded-lg flex items-center gap-3">
+          <span class="text-[10px] font-pixel text-slate-400 uppercase">Level</span>
+          <span class="text-sm font-pixel text-amber-300">120</span>
+        </div>
+
+        <div class="rpg-panel-sub px-4 py-2 rounded-lg flex items-center gap-3 border-amber-500/40">
+          <span class="text-[10px] font-pixel text-slate-400 uppercase">Skill Points</span>
+          <span class="text-sm font-pixel text-emerald-400">14 / 24</span>
+        </div>
+
+        <button class="px-4 py-2 rounded bg-red-900/60 hover:bg-red-800 border-2 border-red-500/60 text-[10px] font-pixel text-red-200 transition active:scale-95">
+          RESET
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+      
+      <!-- Skill Tree Board (Left 2 Columns) -->
+      <main class="lg:col-span-2 rpg-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+        
+        <!-- Category Nav -->
+        <div class="flex items-center gap-2 border-b border-amber-950/80 pb-4 mb-8 overflow-x-auto">
+          <button class="px-4 py-2 rounded bg-amber-500 text-black font-pixel text-[10px] shadow-lg">FARMING</button>
+          <button class="px-4 py-2 rounded bg-black/40 hover:bg-white/5 border border-amber-900/40 text-amber-200/70 font-pixel text-[10px] transition">MINING</button>
+          <button class="px-4 py-2 rounded bg-black/40 hover:bg-white/5 border border-amber-900/40 text-amber-200/70 font-pixel text-[10px] transition">FORESTRY</button>
+          <button class="px-4 py-2 rounded bg-black/40 hover:bg-white/5 border border-amber-900/40 text-amber-200/70 font-pixel text-[10px] transition">COOKING</button>
+        </div>
+
+        <!-- Interactive Skill Tree Node Grid -->
+        <div class="flex-grow flex flex-col justify-around gap-12 py-4 relative">
+          
+          <!-- Tier 1 -->
+          <div class="flex justify-center gap-12">
+            <div class="group relative">
+              <div class="w-16 h-16 rounded-xl bg-amber-950/80 border-2 node-active flex items-center justify-center text-2xl cursor-pointer hover:scale-105 transition">
+                🌱
+              </div>
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-pixel text-amber-300 whitespace-nowrap">Green Thumb</span>
+            </div>
+            <div class="group relative">
+              <div class="w-16 h-16 rounded-xl bg-amber-950/80 border-2 node-active flex items-center justify-center text-2xl cursor-pointer hover:scale-105 transition">
+                💧
+              </div>
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-pixel text-amber-300 whitespace-nowrap">Water Well</span>
+            </div>
+          </div>
+
+          <!-- Tier 2 -->
+          <div class="flex justify-center gap-12">
+            <div class="group relative">
+              <div class="w-16 h-16 rounded-xl bg-slate-900/80 border-2 node-locked flex items-center justify-center text-2xl cursor-pointer hover:scale-105 transition">
+                🌻
+              </div>
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-pixel text-slate-500 whitespace-nowrap">Master Farmer</span>
+            </div>
+            <div class="group relative">
+              <div class="w-16 h-16 rounded-xl bg-slate-900/80 border-2 node-locked flex items-center justify-center text-2xl cursor-pointer hover:scale-105 transition">
+                🧪
+              </div>
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-pixel text-slate-500 whitespace-nowrap">Fertilizer</span>
+            </div>
+          </div>
+
+          <!-- Tier 3 Master Node -->
+          <div class="flex justify-center">
+            <div class="group relative">
+              <div class="w-20 h-20 rounded-2xl bg-slate-900/80 border-2 node-locked flex items-center justify-center text-3xl cursor-pointer hover:scale-105 transition">
+                👑
+              </div>
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-pixel text-amber-400/50 whitespace-nowrap">Golden Crop</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-amber-950/80 flex items-center justify-between text-xs text-slate-400">
+          <span>Click a node to allocate/revoke points</span>
+          <span class="font-pixel text-[9px] text-amber-400/80">Tier 3 Unlocked at Lvl 65</span>
+        </div>
+      </main>
+
+      <!-- Sidebar: Active Stats & Buffs -->
+      <aside class="rpg-panel rounded-xl p-6 flex flex-col justify-between">
+        <div>
+          <h2 class="text-xs font-pixel text-amber-400 uppercase tracking-wider mb-4 border-b border-amber-950/80 pb-3">Active Buffs</h2>
+          
+          <div class="space-y-3">
+            <div class="rpg-panel-sub p-3 rounded-lg flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-lg">⚡</span>
+                <span class="text-xs font-medium text-slate-300">Crop Growth Speed</span>
+              </div>
+              <span class="font-pixel text-xs text-emerald-400">+15%</span>
+            </div>
+
+            <div class="rpg-panel-sub p-3 rounded-lg flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-lg">🌾</span>
+                <span class="text-xs font-medium text-slate-300">Sunflower Yield</span>
+              </div>
+              <span class="font-pixel text-xs text-emerald-400">+0.25</span>
+            </div>
+
+            <div class="rpg-panel-sub p-3 rounded-lg flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-lg">💰</span>
+                <span class="text-xs font-medium text-slate-300">Market Sell Value</span>
+              </div>
+              <span class="font-pixel text-xs text-emerald-400">+5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share Build Action -->
+        <div class="mt-6 pt-6 border-t border-amber-950/80 space-y-3">
+          <button class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-pixel text-xs rounded-lg transition shadow-lg active:scale-95">
+            EXPORT BUILD LINK
+          </button>
+          <p class="text-[10px] text-center text-slate-500">Auto-copies state to clipboard</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Ambient Golden Sun-Dust Canvas Animation Script -->
+  <script>
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const particleCount = 45;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.speedY = -(Math.random() * 0.5 + 0.2);
+        this.opacity = Math.random() * 0.6 + 0.2;
+        this.hue = Math.random() > 0.3 ? 45 : 35; // Golden sunflower hues
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+          this.reset();
+          this.y = canvas.height + 10;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 90%, 60%, ${this.opacity})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `hsl(${this.hue}, 90%, 50%)`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
