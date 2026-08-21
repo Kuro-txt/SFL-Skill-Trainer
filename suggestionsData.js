@@ -102,11 +102,24 @@ const SUGGESTIONS_DATABASE = {
       ]
     }
   ],
+  bees_flowers: [
+    {
+      id: "flower_power",
+      title: "Flower Power",
+      description: "Optimized setup for boosting honeycomb production, acceleration of bee activity, and enhanced floral harvests.",
+      skills: [
+        "hyper_bees",
+        "petal_blessed",
+        "petalled_perk",
+        "blooming_boost",
+        "blossom_bonding"
+      ]
+    }
+  ],
   compost: [],
   aging: [],
   fruit_patch: [],
   animals: [],
-  bees_flowers: [],
   greenhouse: [],
   machinery: []
 };
