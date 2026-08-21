@@ -106,7 +106,7 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "flower_power",
       title: "Flower Power",
-      description: "Optimized setup for boosting honeycomb production, acceleration of bee activity, and enhanced floral harvests.",
+      description: "Focused on flower yield, mutations, petal boosts, and bee synergy.",
       skills: [
         "hyper_bees",
         "petal_blessed",
