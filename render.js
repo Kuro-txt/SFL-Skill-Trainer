@@ -116,7 +116,6 @@ function renderSummary() {
   // Status Headers & Accurate Unlock Verification
   document.getElementById('tier-1-status').innerText = `${catInv.t1} PTS`;
 
-  // Tier 2 Lock/Unlock status
   const t2Req = cat.reqs.t2;
   const t2Unlocked = catInv.totalPoints >= t2Req;
   const t2StatusEl = document.getElementById('tier-2-status');
@@ -129,7 +128,6 @@ function renderSummary() {
   }
   document.getElementById('tier-2-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / t2Req) * 100))}%`;
 
-  // Tier 3 Lock/Unlock status
   const t3Req = cat.reqs.t3;
   const t3Unlocked = catInv.totalPoints >= t3Req;
   const t3StatusEl = document.getElementById('tier-3-status');
@@ -201,7 +199,6 @@ function showToast(message, type = "success") {
   setTimeout(() => { toast.classList.remove("toast-active"); }, 2200);
 }
 
-// Summary Modal Handlers (Mobile)
 function openSummaryModal() {
   const modal = document.getElementById("summary-modal");
   renderSummary();
@@ -256,21 +253,44 @@ function renderModalContent() {
     listContainer.innerHTML = `<div class="p-5 rounded-xl card-sub text-center text-xs text-slate-500 italic">No presets added for ${activeCat.name} yet.</div>`;
   } else {
     listContainer.innerHTML = suggestions.map(preset => {
+      let totalPresetPoints = 0;
+      let totalPresetShards = 0;
+
       const skillPills = preset.skills.map(id => {
         const found = activeCat.skills.find(s => s.id === id);
-        return found ? `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-medium">${found.icon} ${found.name}</span>` : '';
+        if (found) {
+          const cost = getRankCost(found.tier, 1);
+          totalPresetPoints += cost.points;
+          totalPresetShards += cost.shards;
+          return `<span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700/80 text-slate-300 text-[10px] font-medium">${found.icon} ${found.name} <span class="text-amber-400 font-bold">(${found.cost}p)</span></span>`;
+        }
+        return '';
       }).join(' ');
 
       return `
-        <div class="p-2.5 sm:p-3 rounded-xl card-sub border border-slate-800 flex flex-col gap-1.5">
-          <div class="flex items-center justify-between gap-1.5">
-            <h4 class="font-display font-bold text-xs text-white">${preset.title}</h4>
-            <button type="button" onclick="applyPreset('${preset.id}', '${modalSelectedCategoryKey}')" class="btn-primary px-3 py-1 rounded-lg text-slate-950 font-display font-bold text-[11px] cursor-pointer">
+        <div class="p-3 sm:p-3.5 rounded-xl card-sub border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center justify-between gap-1.5 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="font-display font-bold text-xs sm:text-sm text-white">${preset.title}</h4>
+              <span class="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
+              
+              <!-- Total Cost Badges -->
+              <span class="px-2 py-0.5 rounded-md bg-amber-400/10 border border-amber-400/30 text-[10px] font-pixel text-amber-400 font-bold">
+                ${totalPresetPoints} PTS
+              </span>
+              ${totalPresetShards > 0 ? `
+                <span class="px-2 py-0.5 rounded-md bg-cyan-400/10 border border-cyan-400/30 text-[10px] font-pixel text-cyan-300 font-bold">
+                  ${totalPresetShards} 🔷
+                </span>
+              ` : ''}
+            </div>
+
+            <button type="button" onclick="applyPreset('${preset.id}', '${modalSelectedCategoryKey}')" class="btn-primary px-3 py-1 rounded-lg text-slate-950 font-display font-bold text-[11px] cursor-pointer whitespace-nowrap">
               Apply Build
             </button>
           </div>
           <p class="text-xs text-slate-400 leading-relaxed">${preset.description}</p>
-          <div class="flex flex-wrap gap-1 pt-1 border-t border-slate-800/60">${skillPills}</div>
+          <div class="flex flex-wrap gap-1 pt-1.5 border-t border-slate-800/60">${skillPills}</div>
         </div>
       `;
     }).join('');
