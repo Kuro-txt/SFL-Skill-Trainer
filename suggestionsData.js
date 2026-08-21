@@ -43,12 +43,31 @@ const SUGGESTIONS_DATABASE = {
   ],
   trees: [
     {
+      id: "newbie_lumberjack",
+      title: "Newbie Lumberjack",
+      tag: "STARTER",
+      badgeColor: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
+      description: "An economical early-game woodcutting setup that lowers axe/tool costs, boosts wood drop chance, and speeds up node replenishment.",
+      skills: [
+        "lumberjacks_extra",
+        "tough_tree",
+        "tree_charge",
+        "fellers_discount"
+      ]
+    },
+    {
       id: "tree_insta_logger",
       title: "Rapid Wood Harvester",
       tag: "SPEED",
       badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
       description: "Tap-chops trees instantly with quick turnaround resets.",
-      skills: ["lumberjacks_extra", "tree_charge", "insta_chop", "tough_tree", "tree_turnaround"]
+      skills: [
+        "lumberjacks_extra",
+        "tree_charge",
+        "insta_chop",
+        "tough_tree",
+        "tree_turnaround"
+      ]
     }
   ],
   fishing: [
@@ -58,7 +77,13 @@ const SUGGESTIONS_DATABASE = {
       tag: "XP / SPEC",
       badgeColor: "text-purple-400 border-purple-400/30 bg-purple-400/10",
       description: "Expands daily reel count and boosts expert fish drop rates with XP bonuses.",
-      skills: ["fishermans_5_fold", "fishy_roll", "fishermans_10_fold", "fishy_gamble", "fishy_feast"]
+      skills: [
+        "fishermans_5_fold",
+        "fishy_roll",
+        "fishermans_10_fold",
+        "fishy_gamble",
+        "fishy_feast"
+      ]
     }
   ],
   mining: [
@@ -68,7 +93,14 @@ const SUGGESTIONS_DATABASE = {
       tag: "MINING",
       badgeColor: "text-rose-400 border-rose-400/30 bg-rose-400/10",
       description: "Reduces Iron/Gold node cooldowns and maximizes Crimstone streaks.",
-      skills: ["rock_n_roll", "iron_bumpkin", "speed_miner", "iron_hustle", "fire_kissed", "ferrous_favor"]
+      skills: [
+        "rock_n_roll",
+        "iron_bumpkin",
+        "speed_miner",
+        "iron_hustle",
+        "fire_kissed",
+        "ferrous_favor"
+      ]
     }
   ],
   cooking: [],
