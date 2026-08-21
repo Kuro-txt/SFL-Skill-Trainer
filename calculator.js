@@ -1,3 +1,16 @@
+// Mapping table: maps long skill IDs to ultra-compact codes (e.g. c01, t02, m05)
+const SKILL_SHORT_MAP = {};
+const SHORT_TO_SKILL_MAP = {};
+
+Object.entries(SKILL_DATABASE).forEach(([catKey, cat]) => {
+  const prefix = catKey.charAt(0);
+  cat.skills.forEach((skill, idx) => {
+    const code = `${prefix}${String(idx + 1).padStart(2, '0')}`;
+    SKILL_SHORT_MAP[skill.id] = code;
+    SHORT_TO_SKILL_MAP[code] = skill.id;
+  });
+});
+
 // Dynamic lookup map: normalized skill name -> skill ID
 const SKILL_NAME_LOOKUP = {};
 Object.values(SKILL_DATABASE).forEach(cat => {
@@ -33,7 +46,6 @@ function getCumulativeSkillCost(tier, rank) {
   return { points, shards };
 }
 
-// Points & shards spent in a single category
 function getCategoryInvestments(catKey) {
   const cat = SKILL_DATABASE[catKey];
   let t1 = 0, t2 = 0, t3 = 0;
@@ -55,7 +67,6 @@ function getCategoryInvestments(catKey) {
   return { t1, t2, t3, totalPoints, totalShards };
 }
 
-// Total points & shards spent across all categories
 function getTotalGlobalInvestments() {
   let points = 0;
   let shards = 0;
@@ -67,7 +78,6 @@ function getTotalGlobalInvestments() {
   return { points, shards };
 }
 
-// Enforces tier prerequisites and refunds broken branches
 function validateTierRequirements(catKey) {
   const cat = SKILL_DATABASE[catKey];
   let inv = getCategoryInvestments(catKey);
