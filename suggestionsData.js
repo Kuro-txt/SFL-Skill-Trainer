@@ -95,8 +95,8 @@ const SUGGESTIONS_DATABASE = {
       description: "Fully iron focused.",
       skills: [
         "iron_bumpkin",
-        "tap_prospecter",
-        "forged-ward_profits",
+        "tap_prospector",
+        "forge-ward_profits",
         "frugal_miner",
         "iron_hustle",
         "ferrous_favor"
