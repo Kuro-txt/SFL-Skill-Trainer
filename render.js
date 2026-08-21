@@ -92,21 +92,26 @@ function renderSummary() {
   const catInv = getCategoryInvestments(currentCategoryKey);
   const globalInv = getTotalGlobalInvestments();
 
-  // Top Bar Counters & Mobile FAB Badge
+  // Top Bar Counters & Mobile FAB
   document.getElementById('hud-total-points').innerText = `${globalInv.points} pts`;
   document.getElementById('hud-total-shards').innerText = `${globalInv.shards}`;
-  const fabBadge = document.getElementById('fab-pts-badge');
-  if (fabBadge) fabBadge.innerText = `${catInv.totalPoints}p`;
+  
+  const fabPts = document.getElementById('fab-tab-pts');
+  if (fabPts) fabPts.innerText = `${catInv.totalPoints}p`;
 
-  // Desktop + Mobile Drawer Investment Counters
-  ['tab-summary-points', 'm-tab-summary-points'].forEach(id => {
+  // Tab Summary (Desktop Sidebar + Mobile Popup Modal)
+  ['tab-summary-points', 'modal-summary-points'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerText = catInv.totalPoints;
   });
-  ['tab-summary-shards', 'm-tab-summary-shards'].forEach(id => {
+
+  ['tab-summary-shards', 'modal-summary-shards'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerText = catInv.totalShards;
   });
+
+  const modalTitle = document.getElementById('modal-summary-title');
+  if (modalTitle) modalTitle.innerText = `${cat.name} Summary`;
 
   // Status Headers & Progress Bars
   document.getElementById('tier-1-status').innerText = `${catInv.t1} PTS`;
@@ -119,10 +124,10 @@ function renderSummary() {
   document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${catInv.t3}/${cat.reqs.t3})`;
   document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / cat.reqs.t3) * 100))}%`;
 
-  // Desktop + Mobile Tier Summary
-  ['summary-t1', 'm-summary-t1'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t1}p`; });
-  ['summary-t2', 'm-summary-t2'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t2}p`; });
-  ['summary-t3', 'm-summary-t3'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t3}p`; });
+  // Tier Breakdown (Sidebar + Modal)
+  ['summary-t1', 'modal-summary-t1'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t1}p`; });
+  ['summary-t2', 'modal-summary-t2'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t2}p`; });
+  ['summary-t3', 'modal-summary-t3'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t3}p`; });
 
   let buffs = [];
   let debuffs = [];
@@ -153,8 +158,8 @@ function renderSummary() {
         </div>
       `).join('');
 
-  ['buffs-list', 'm-buffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = buffsHTML; });
-  ['debuffs-list', 'm-debuffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = debuffsHTML; });
+  ['buffs-list', 'modal-buffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = buffsHTML; });
+  ['debuffs-list', 'modal-debuffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = debuffsHTML; });
 }
 
 function render() {
@@ -165,28 +170,32 @@ function render() {
   renderSummary();
 }
 
-// Mobile Summary Drawer Open/Close Handlers
-function openSummaryDrawer() {
-  document.getElementById('drawer-backdrop').classList.remove('hidden');
-  document.getElementById('summary-drawer').classList.add('drawer-open');
-}
-
-function closeSummaryDrawer() {
-  document.getElementById('drawer-backdrop').classList.add('hidden');
-  document.getElementById('summary-drawer').classList.remove('drawer-open');
-}
-
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast-notification");
   document.getElementById("toast-text").innerText = message;
   
   if (type === "error") {
-    toast.className = "fixed top-4 inset-x-0 mx-auto w-fit z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
   } else {
-    toast.className = "fixed top-4 inset-x-0 mx-auto w-fit z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
   }
 
   setTimeout(() => { toast.classList.remove("toast-active"); }, 2200);
+}
+
+// Summary Modal Handlers (Mobile)
+function openSummaryModal() {
+  const modal = document.getElementById("summary-modal");
+  renderSummary();
+  modal.style.display = "flex";
+}
+
+function closeSummaryModal() {
+  document.getElementById("summary-modal").style.display = "none";
+}
+
+function onSummaryBackdropClick(event) {
+  if (event.target.id === "summary-modal") closeSummaryModal();
 }
 
 // Presets Modal Handlers
