@@ -1,6 +1,5 @@
 const FARM_STORAGE_KEY = "sfl_farm_id";
 
-// Pre-fills the Farm ID input from localStorage on load
 function loadSavedFarmId() {
   const savedId = localStorage.getItem(FARM_STORAGE_KEY);
   if (savedId) {
@@ -18,7 +17,6 @@ async function fetchFarmSkills(event) {
 
   if (!farmId) return;
 
-  // Persist Farm ID to Local Storage
   localStorage.setItem(FARM_STORAGE_KEY, farmId);
 
   const originalBtnText = fetchBtn.innerHTML;
@@ -54,6 +52,7 @@ async function fetchFarmSkills(event) {
       });
 
       Object.keys(SKILL_DATABASE).forEach(validateTierRequirements);
+      saveStateToLocalStorage();
 
       const totals = getTotalGlobalInvestments();
       showToast(`Synced Farm #${farmId}: ${matchedCount} skills (${totals.points} pts, ${totals.shards} shards)`);
