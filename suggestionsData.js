@@ -17,20 +17,19 @@ const SUGGESTIONS_DATABASE = {
       ]
     },
     {
-      id: "crop_speedrunner",
-      title: "Max Growth Speedrun",
-      tag: "SPEED",
-      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
-      description: "Optimized for active plot rotation, instant harvests, and maximum crop turnaround times.",
-      skills: ["green_thumb", "chonky_scarecrow", "strong_roots", "instant_growth"]
-    },
-    {
       id: "crop_yield_heavy",
       title: "Basic & Medium Bulk Yield",
       tag: "BULK YIELD",
       badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
       description: "Maximizes low-tier crop outputs for deliveries, animal feeds, and cooking supplies.",
-      skills: ["young_farmer", "experienced_farmer", "horror_mike", "hectare_farm"]
+      skills: [
+        "young_farmer",
+        "instant_growth",
+        "green_thumb",
+        "experienced_farmer",
+        "horror_mike",
+        "hectare_farm"
+      ]
     },
     {
       id: "crop_delivery_coins",
