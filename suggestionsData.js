@@ -3,8 +3,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "advanced_crop_mastery",
       title: "Advanced Crops Focus",
-      tag: "ADVANCED CROPS",
-      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
       description: "Maximizes yields, growth speed, and AOE boosts specifically for high-tier advanced crops with instant harvest and delivery bonuses.",
       skills: [
         "green_thumb",
@@ -19,8 +17,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "crop_yield_heavy",
       title: "Basic & Medium Bulk Yield",
-      tag: "BULK YIELD",
-      badgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
       description: "Maximizes low-tier crop outputs for deliveries, animal feeds, and cooking supplies.",
       skills: [
         "young_farmer",
@@ -34,8 +30,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "crop_delivery_coins",
       title: "Betty's Market Tycoon",
-      tag: "COINS",
-      badgeColor: "text-sky-400 border-sky-400/30 bg-sky-400/10",
       description: "Focuses on maximizing coin profits from plot crop deliveries and market selling.",
       skills: ["bettys_friend", "coin_swindler", "golden_sunflower"]
     }
@@ -44,8 +38,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "newbie_lumberjack",
       title: "Newbie Lumberjack",
-      tag: "STARTER",
-      badgeColor: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
       description: "An economical early-game woodcutting setup that lowers axe/tool costs, boosts wood drop chance, and speeds up node replenishment.",
       skills: [
         "lumberjacks_extra",
@@ -57,8 +49,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "tree_insta_logger",
       title: "Rapid Wood Harvester",
-      tag: "SPEED",
-      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
       description: "Tap-chops trees instantly with quick turnaround resets.",
       skills: [
         "lumberjacks_extra",
@@ -73,8 +63,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "master_angler",
       title: "Deep Sea XP & Rare Catch",
-      tag: "XP / SPEC",
-      badgeColor: "text-purple-400 border-purple-400/30 bg-purple-400/10",
       description: "Expands daily reel count and boosts expert fish drop rates with XP bonuses.",
       skills: [
         "fishermans_5_fold",
@@ -89,8 +77,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "iron_rusher",
       title: "Iron Rusher",
-      tag: "MINING",
-      badgeColor: "text-rose-400 border-rose-400/30 bg-rose-400/10",
       description: "Fully iron focused.",
       skills: [
         "iron_bumpkin",
@@ -106,8 +92,6 @@ const SUGGESTIONS_DATABASE = {
     {
       id: "pizza_party_kit",
       title: "Pizza Party Kit",
-      tag: "COOKING SPEED",
-      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
       description: "Accelerates food preparation times, boosts meal eating XP, and increases high-tier culinary reward streaks.",
       skills: [
         "nom_nom",
