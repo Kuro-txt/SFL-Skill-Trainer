@@ -103,7 +103,22 @@ const SUGGESTIONS_DATABASE = {
       ]
     }
   ],
-  cooking: [],
+  cooking: [
+    {
+      id: "pizza_party_kit",
+      title: "Pizza Party Kit",
+      tag: "COOKING SPEED",
+      badgeColor: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+      description: "Accelerates food preparation times, boosts meal eating XP, and increases high-tier culinary reward streaks.",
+      skills: [
+        "nom_nom",
+        "munching_mastery",
+        "fast_feasts",
+        "drive-through_deli",
+        "fiery_jackpot"
+      ]
+    }
+  ],
   compost: [],
   aging: [],
   fruit_patch: [],
