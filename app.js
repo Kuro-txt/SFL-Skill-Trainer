@@ -84,42 +84,89 @@ function applyPreset(presetId, categoryKey) {
   preset.skills.forEach(skillId => skillRanks[skillId] = 1);
 
   validateTierRequirements(targetCategory);
-  currentCategoryKey = targetCategory; // Navigate directly to that category tab
+  currentCategoryKey = targetCategory;
 
   closeSuggestionsModal();
   showToast(`Applied ${preset.title}`);
   render();
 }
 
-function exportBuildLink() {
-  const encoded = btoa(JSON.stringify(skillRanks));
-  const url = new URL(window.location.href);
-  url.searchParams.set("build", encoded);
+// --- Short Link Generation Engine ---
+function exportBuildLink(tabOnly = false) {
+  const targetSkills = tabOnly 
+    ? SKILL_DATABASE[currentCategoryKey].skills.map(s => s.id) 
+    : Object.keys(skillRanks);
+
+  // Short format: "c01.2_m04.1" (shortCode.rank)
+  const encodedParts = [];
+  targetSkills.forEach(skillId => {
+    const rank = skillRanks[skillId];
+    const code = SKILL_SHORT_MAP[skillId];
+    if (rank && code) {
+      encodedParts.push(`${code}.${rank}`);
+    }
+  });
+
+  const url = new URL(window.location.origin + window.location.pathname);
+  if (encodedParts.length > 0) {
+    url.searchParams.set("b", encodedParts.join('_'));
+  }
+  if (tabOnly) {
+    url.searchParams.set("t", currentCategoryKey);
+  }
+
   navigator.clipboard.writeText(url.href);
-  showToast("Build link copied!");
+  closeShareModal();
+  showToast(tabOnly ? `Copied ${SKILL_DATABASE[currentCategoryKey].name} short link!` : "Copied full build short link!");
 }
 
 function loadBuildFromURL() {
   const params = new URLSearchParams(window.location.search);
-  const build = params.get("build");
-  if (build) {
+  const compressed = params.get("b");
+  const tabParam = params.get("t");
+
+  if (tabParam && SKILL_DATABASE[tabParam]) {
+    currentCategoryKey = tabParam;
+  }
+
+  if (compressed) {
     try {
-      const decoded = JSON.parse(atob(build));
-      if (typeof decoded === "object" && decoded !== null) {
-        if (Array.isArray(decoded)) {
-          skillRanks = {};
-          decoded.forEach(id => skillRanks[id] = 1);
-        } else {
-          skillRanks = decoded;
+      skillRanks = {};
+      const tokens = compressed.split('_');
+      tokens.forEach(tok => {
+        const [code, rankStr] = tok.split('.');
+        const skillId = SHORT_TO_SKILL_MAP[code];
+        const rank = parseInt(rankStr, 10);
+        if (skillId && rank >= 1 && rank <= 3) {
+          skillRanks[skillId] = rank;
         }
-      }
+      });
+      Object.keys(SKILL_DATABASE).forEach(validateTierRequirements);
     } catch (e) {
-      console.error("Invalid build parameter", e);
+      console.error("Failed to parse short build string", e);
     }
   }
 }
 
-// Initial Boot: Load URL build, restore Farm ID from local storage, and render UI
+// Modal Handlers
+function openShareModal() {
+  const modal = document.getElementById("share-modal");
+  const tabTitle = document.getElementById("share-tab-title");
+  if (tabTitle) {
+    tabTitle.innerText = `Share ${SKILL_DATABASE[currentCategoryKey].name} Only`;
+  }
+  modal.style.display = "flex";
+}
+
+function closeShareModal() {
+  document.getElementById("share-modal").style.display = "none";
+}
+
+function onShareBackdropClick(event) {
+  if (event.target.id === "share-modal") closeShareModal();
+}
+
+// Boot
 loadSavedFarmId();
 loadBuildFromURL();
 render();
