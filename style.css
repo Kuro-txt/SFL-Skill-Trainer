@@ -108,14 +108,14 @@ body {
 
 /* Rank Dots */
 .rank-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 9999px;
   background-color: #334155;
 }
 .rank-dot.active {
   background-color: #f59e0b;
-  box-shadow: 0 0 6px #f59e0b;
+  box-shadow: 0 0 5px #f59e0b;
 }
 
 /* Floating Toast */
