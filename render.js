@@ -1,44 +1,4 @@
 let modalSelectedCategoryKey = "crops";
-let currentMobileTierTab = 1; // 1 | 2 | 3 | 'stats'
-
-function setMobileTierTab(tab) {
-  currentMobileTierTab = tab;
-  applyMobileTierVisibility();
-}
-
-function applyMobileTierVisibility() {
-  const isDesktop = window.innerWidth >= 1024;
-  const t1Panel = document.getElementById('tier-1-panel');
-  const t2Panel = document.getElementById('tier-2-panel');
-  const t3Panel = document.getElementById('tier-3-panel');
-  const mStatsPanel = document.getElementById('mobile-stats-panel');
-
-  if (isDesktop) {
-    // Show all panels side-by-side on desktop
-    t1Panel.style.display = 'flex';
-    t2Panel.style.display = 'flex';
-    t3Panel.style.display = 'flex';
-    mStatsPanel.style.display = 'none';
-  } else {
-    // On mobile, show only selected tier/stats
-    t1Panel.style.display = currentMobileTierTab === 1 ? 'flex' : 'none';
-    t2Panel.style.display = currentMobileTierTab === 2 ? 'flex' : 'none';
-    t3Panel.style.display = currentMobileTierTab === 3 ? 'flex' : 'none';
-    mStatsPanel.style.display = currentMobileTierTab === 'stats' ? 'flex' : 'none';
-
-    // Update button active state
-    [1, 2, 3, 'stats'].forEach(t => {
-      const btn = document.getElementById(`m-tab-${t}`);
-      if (btn) {
-        btn.className = currentMobileTierTab === t
-          ? 'flex-1 py-1.5 rounded-lg text-[10px] font-bold transition bg-amber-400 text-slate-950 shadow'
-          : 'flex-1 py-1.5 rounded-lg text-[10px] font-bold transition text-slate-400 bg-slate-900/50';
-      }
-    });
-  }
-}
-
-window.addEventListener('resize', applyMobileTierVisibility);
 
 function renderTabs() {
   const nav = document.getElementById("category-tabs");
@@ -46,7 +6,7 @@ function renderTabs() {
     const isActive = key === currentCategoryKey;
     const inv = getCategoryInvestments(key);
     return `
-      <button type="button" onclick="setCategory('${key}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1.5 cursor-pointer ${
+      <button type="button" onclick="setCategory('${key}')" class="px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition border flex items-center gap-1.5 cursor-pointer ${
         isActive
           ? 'bg-amber-400/15 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
           : 'card-sub text-slate-400 hover:text-slate-200 hover:border-slate-700'
@@ -83,16 +43,16 @@ function renderTierGrid(tierNum, elementId) {
     }
 
     return `
-      <div onclick="toggleSkillCard('${skill.id}')" class="${cardClass} p-3 rounded-xl flex flex-col justify-between select-none cursor-pointer transition-all min-h-[105px]">
+      <div onclick="toggleSkillCard('${skill.id}')" class="${cardClass} p-2 sm:p-3 rounded-lg sm:rounded-xl flex flex-col justify-between select-none cursor-pointer transition-all min-h-[96px] sm:min-h-[105px]">
         <div>
           <!-- Title & Rank Dots -->
-          <div class="flex items-center justify-between gap-1.5 mb-1.5">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <span class="text-base flex-shrink-0">${skill.icon}</span>
-              <span class="text-xs font-bold font-display truncate ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
+          <div class="flex items-center justify-between gap-1 mb-1 sm:mb-1.5">
+            <div class="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <span class="text-sm sm:text-base flex-shrink-0">${skill.icon}</span>
+              <span class="text-[11px] sm:text-xs font-bold font-display truncate ${isAllocated ? 'text-amber-300' : 'text-slate-200'}">${skill.name}</span>
             </div>
             
-            <div class="flex items-center gap-1 bg-slate-900/90 px-1.5 py-0.5 rounded-md border border-slate-800 flex-shrink-0">
+            <div class="flex items-center gap-0.5 sm:gap-1 bg-slate-900/90 px-1 sm:px-1.5 py-0.5 rounded-md border border-slate-800 flex-shrink-0">
               <div class="rank-dot ${rank >= 1 ? 'active' : ''}"></div>
               <div class="rank-dot ${rank >= 2 ? 'active' : ''}"></div>
               <div class="rank-dot ${rank >= 3 ? 'active' : ''}"></div>
@@ -100,24 +60,24 @@ function renderTierGrid(tierNum, elementId) {
             </div>
           </div>
 
-          <!-- Buff Descriptions -->
-          <div class="space-y-0.5 text-[11px] mb-2 leading-snug">
-            ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-tight">• ${b}</p>`).join('')}
-            ${skill.debuffs.map(d => `<p class="text-rose-400 leading-tight">• ${d}</p>`).join('')}
+          <!-- Compact Buff Descriptions -->
+          <div class="space-y-0.5 text-[10px] sm:text-[11px] mb-1 sm:mb-2 leading-tight">
+            ${skill.buffs.map(b => `<p class="text-emerald-400/90 leading-tight truncate">• ${b}</p>`).join('')}
+            ${skill.debuffs.map(d => `<p class="text-rose-400 leading-tight truncate">• ${d}</p>`).join('')}
           </div>
         </div>
 
         <!-- Cost & Controls -->
-        <div class="flex items-center justify-between pt-1.5 border-t border-slate-800/60 mt-1">
-          <span class="text-[9px] font-pixel ${rank === 3 ? 'text-amber-400 font-bold' : 'text-slate-400'}">
+        <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-800/60 mt-0.5">
+          <span class="text-[8px] sm:text-[9px] font-pixel ${rank === 3 ? 'text-amber-400 font-bold' : 'text-slate-400'}">
             ${isTierUnlocked || isAllocated ? nextCostText : `REQ ${req}P`}
           </span>
 
           <div class="flex items-center gap-1" onclick="event.stopPropagation()">
-            <button type="button" onclick="downgradeSkill('${skill.id}', event)" ${rank === 0 ? 'disabled' : ''} class="btn-step w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold text-slate-200">
+            <button type="button" onclick="downgradeSkill('${skill.id}', event)" ${rank === 0 ? 'disabled' : ''} class="btn-step w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg flex items-center justify-center text-xs font-bold text-slate-200">
               -
             </button>
-            <button type="button" onclick="upgradeSkill('${skill.id}', event)" ${rank === 3 || (!isTierUnlocked && rank === 0) ? 'disabled' : ''} class="btn-step w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold text-amber-300">
+            <button type="button" onclick="upgradeSkill('${skill.id}', event)" ${rank === 3 || (!isTierUnlocked && rank === 0) ? 'disabled' : ''} class="btn-step w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg flex items-center justify-center text-xs font-bold text-amber-300">
               +
             </button>
           </div>
@@ -151,10 +111,9 @@ function renderSummary() {
   document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${catInv.t3}/${cat.reqs.t3})`;
   document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / cat.reqs.t3) * 100))}%`;
 
-  // Desktop + Mobile Tier Summary
-  ['summary-t1', 'm-summary-t1'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t1}p`; });
-  ['summary-t2', 'm-summary-t2'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t2}p`; });
-  ['summary-t3', 'm-summary-t3'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t3}p`; });
+  document.getElementById('summary-t1').innerText = `${catInv.t1}p`;
+  document.getElementById('summary-t2').innerText = `${catInv.t2}p`;
+  document.getElementById('summary-t3').innerText = `${catInv.t3}p`;
 
   let buffs = [];
   let debuffs = [];
@@ -167,32 +126,25 @@ function renderSummary() {
     }
   });
 
-  const buffsHTML = buffs.length === 0 
+  const buffsEl = document.getElementById('buffs-list');
+  buffsEl.innerHTML = buffs.length === 0 
     ? `<div class="text-[11px] text-slate-500 italic p-2 rounded-lg card-sub">No ${cat.name} buffs active</div>`
     : buffs.map(b => `
-        <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-between gap-1.5">
-          <div class="flex items-center gap-1.5 min-w-0">
-            <span>${b.icon}</span>
-            <span class="truncate">${b.text}</span>
-          </div>
+        <div class="p-1.5 sm:p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-between gap-1 text-[11px]">
+          <span class="truncate">${b.icon} ${b.text}</span>
           <span class="text-[8px] font-pixel px-1 py-0.2 rounded bg-emerald-400/20 text-emerald-300">R${b.rank}</span>
         </div>
       `).join('');
 
-  const debuffsHTML = debuffs.length === 0 
+  const debuffsEl = document.getElementById('debuffs-list');
+  debuffsEl.innerHTML = debuffs.length === 0 
     ? `<div class="text-[11px] text-slate-500 italic p-2 rounded-lg card-sub">No ${cat.name} tradeoffs</div>`
     : debuffs.map(d => `
-        <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center justify-between gap-1.5">
-          <div class="flex items-center gap-1.5 min-w-0">
-            <span>${d.icon}</span>
-            <span class="truncate">${d.text}</span>
-          </div>
+        <div class="p-1.5 sm:p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center justify-between gap-1 text-[11px]">
+          <span class="truncate">${d.icon} ${d.text}</span>
           <span class="text-[8px] font-pixel px-1 py-0.2 rounded bg-rose-400/20 text-rose-300">R${d.rank}</span>
         </div>
       `).join('');
-
-  ['buffs-list', 'mobile-buffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = buffsHTML; });
-  ['debuffs-list', 'mobile-debuffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = debuffsHTML; });
 }
 
 function render() {
@@ -201,7 +153,6 @@ function render() {
   renderTierGrid(2, "tier-2-grid");
   renderTierGrid(3, "tier-3-grid");
   renderSummary();
-  applyMobileTierVisibility();
 }
 
 function showToast(message, type = "success") {
@@ -209,12 +160,12 @@ function showToast(message, type = "success") {
   document.getElementById("toast-text").innerText = message;
   
   if (type === "error") {
-    toast.className = "fixed bottom-5 right-5 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
   } else {
-    toast.className = "fixed bottom-5 right-5 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
   }
 
-  setTimeout(() => { toast.classList.remove("toast-active"); }, 2400);
+  setTimeout(() => { toast.classList.remove("toast-active"); }, 2200);
 }
 
 // Presets Modal Handlers
@@ -240,8 +191,8 @@ function renderModalContent() {
     return `
       <button type="button" onclick="setModalCategory('${key}')" class="px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center gap-1 cursor-pointer ${
         isSelected
-          ? 'bg-amber-400/20 border border-amber-400 text-amber-300'
-          : 'bg-slate-900/60 border border-slate-800 text-slate-400'
+          ? 'bg-amber-400/20 border border-amber-400 text-amber-300 shadow-sm'
+          : 'bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200'
       }">
         <span>${cat.icon}</span>
         <span>${cat.name}</span>
@@ -263,7 +214,7 @@ function renderModalContent() {
       }).join(' ');
 
       return `
-        <div class="p-3 rounded-xl card-sub border border-slate-800 flex flex-col gap-1.5">
+        <div class="p-2.5 sm:p-3 rounded-xl card-sub border border-slate-800 flex flex-col gap-1.5">
           <div class="flex items-center justify-between gap-1.5">
             <h4 class="font-display font-bold text-xs text-white">${preset.title}</h4>
             <button type="button" onclick="applyPreset('${preset.id}', '${modalSelectedCategoryKey}')" class="btn-primary px-3 py-1 rounded-lg text-slate-950 font-display font-bold text-[11px] cursor-pointer">
