@@ -88,17 +88,17 @@ const SUGGESTIONS_DATABASE = {
   ],
   mining: [
     {
-      id: "crimstone_iron_rusher",
-      title: "Node Rusher",
+      id: "iron_rusher",
+      title: "Iron Rusher",
       tag: "MINING",
       badgeColor: "text-rose-400 border-rose-400/30 bg-rose-400/10",
-      description: "Reduces Iron/Gold node cooldowns and maximizes Crimstone streaks.",
+      description: "Fully iron focused.",
       skills: [
-        "rock_n_roll",
         "iron_bumpkin",
-        "speed_miner",
+        "tab_prospecter",
+        "forged-ward_profit",
+        "frugal_miner",
         "iron_hustle",
-        "fire_kissed",
         "ferrous_favor"
       ]
     }
