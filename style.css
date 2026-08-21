@@ -19,11 +19,41 @@ body {
 .font-pixel { font-family: var(--font-pixel); }
 .font-display { font-family: var(--font-display); }
 
-/* Minimal Scrollbars */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+/* Global Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+/* Enhanced Visible Slide Bar for Category Navigation */
+.tabs-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b rgba(15, 23, 42, 0.85);
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs-scrollbar::-webkit-scrollbar {
+  height: 8px !important;
+}
+
+.tabs-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  margin: 0 4px;
+}
+
+.tabs-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%) !important;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.tabs-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #fcd34d !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.6);
+}
 
 /* Frosted Glass Panels */
 .card-glass {
@@ -38,7 +68,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Polished Buttons */
+/* Buttons */
 .btn-primary {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   border: 1px solid rgba(254, 240, 138, 0.3);
