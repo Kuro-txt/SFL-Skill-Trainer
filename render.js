@@ -272,7 +272,6 @@ function renderModalContent() {
           <div class="flex items-center justify-between gap-1.5 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap">
               <h4 class="font-display font-bold text-xs sm:text-sm text-white">${preset.title}</h4>
-              <span class="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-pixel border ${preset.badgeColor}">${preset.tag}</span>
               
               <!-- Total Cost Badges -->
               <span class="px-2 py-0.5 rounded-md bg-amber-400/10 border border-amber-400/30 text-[10px] font-pixel text-amber-400 font-bold">
