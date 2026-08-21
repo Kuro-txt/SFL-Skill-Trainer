@@ -15,32 +15,31 @@
   <div class="max-w-7xl w-full flex flex-col gap-2.5 sm:gap-3">
     
     <!-- Top HUD Header -->
-    <header class="card-glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 flex flex-col gap-2 sm:gap-3">
+    <header class="card-glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
       
-      <!-- Top Row: Logo (Left) + Farm ID Sync Bar (Right) -->
-      <div class="flex items-center justify-between gap-2 w-full">
-        <!-- Logo & Title -->
-        <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 flex items-center justify-center text-base sm:text-xl shadow-[0_0_18px_rgba(245,158,11,0.3)] flex-shrink-0">
+      <!-- Top Row: Logo & Title (Left) + Farm ID Sync (Top Right on Mobile) -->
+      <div class="flex items-center justify-between w-full md:w-auto gap-2">
+        <div class="flex items-center gap-2 sm:gap-2.5">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 flex items-center justify-center text-lg sm:text-xl shadow-[0_0_18px_rgba(245,158,11,0.3)] flex-shrink-0">
             🌻
           </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <h1 class="font-display text-xs sm:text-base font-bold tracking-tight text-white leading-none truncate">SKILL TRAINER</h1>
-              <span class="px-1 py-0.2 rounded bg-amber-400/10 border border-amber-400/30 text-[7px] sm:text-[8px] font-pixel text-amber-400">SFL</span>
+          <div>
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <h1 class="font-display text-xs sm:text-base font-bold tracking-tight text-white leading-none">SKILL TRAINER</h1>
+              <span class="px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30 text-[8px] font-pixel text-amber-400">SFL</span>
             </div>
-            <p class="text-[9px] sm:text-[11px] text-slate-400 font-medium truncate">Sunflower Land Matrix</p>
+            <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">Sunflower Land Matrix</p>
           </div>
         </div>
 
-        <!-- Farm ID Fetcher (Pinned Top-Right) -->
-        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900 rounded-lg sm:rounded-xl border border-slate-700/80 p-0.5 max-w-[155px] sm:max-w-[200px] w-full focus-within:border-amber-400 focus-within:ring-1 focus-within:ring-amber-400/40 transition-all flex-shrink-0">
+        <!-- Farm ID Fetcher (Top Right on Mobile) -->
+        <form onsubmit="fetchFarmSkills(event)" class="flex items-center bg-slate-900 rounded-lg sm:rounded-xl border border-slate-700/80 p-0.5 max-w-[145px] sm:max-w-[190px] w-full focus-within:border-amber-400 focus-within:ring-1 focus-within:ring-amber-400/40 transition-all flex-shrink-0">
           <span class="pl-1.5 text-slate-500 text-xs font-semibold">#</span>
           <input 
             id="farm-id-input" 
             type="number" 
             placeholder="Farm ID" 
-            class="w-full px-1 py-0.5 sm:py-1 bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            class="w-full px-1.5 py-0.5 sm:py-1 bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             required 
           />
           <button 
@@ -53,23 +52,23 @@
         </form>
       </div>
 
-      <!-- Action & Counter Toolbar -->
-      <div class="flex items-center justify-between gap-1.5 sm:gap-2 flex-wrap pt-1.5 border-t border-slate-800/80">
+      <!-- Action & Global Totals Row -->
+      <div class="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 w-full md:w-auto flex-wrap">
+        
         <!-- Live Totals -->
-        <div class="flex items-center gap-1.5">
-          <div class="card-sub px-2 sm:px-2.5 py-1 rounded-lg flex items-center gap-1 text-xs">
+        <div class="flex items-center gap-1 sm:gap-1.5">
+          <div class="card-sub px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl flex items-center gap-1 text-xs">
             <span class="text-[9px] text-slate-400 uppercase font-semibold">Total</span>
             <span id="hud-total-points" class="font-display font-bold text-amber-400 text-xs sm:text-sm">0 pts</span>
           </div>
 
-          <div class="card-sub px-2 sm:px-2.5 py-1 rounded-lg flex items-center gap-1 text-xs border-cyan-500/20">
+          <div class="card-sub px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl flex items-center gap-1 text-xs border-cyan-500/20">
             <span class="text-cyan-400 text-xs">🔷</span>
             <span id="hud-total-shards" class="font-display font-bold text-cyan-300 text-xs sm:text-sm">0</span>
           </div>
         </div>
 
-        <!-- Buttons -->
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1 sm:gap-1.5">
           <button type="button" onclick="openSuggestionsModal()" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-[10px] sm:text-[11px] font-bold text-amber-300 flex items-center gap-1 transition active:scale-95 cursor-pointer whitespace-nowrap">
             <span>💡</span> Presets
           </button>
@@ -82,19 +81,20 @@
             Reset All
           </button>
         </div>
+
       </div>
     </header>
 
-    <!-- Category Pill Horizontal Navigation -->
+    <!-- Category Tabs Navigation -->
     <nav id="category-tabs" class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none"></nav>
 
-    <!-- Main Grid: Widescreen PC 3-Cols + Sidebar -->
+    <!-- Main Grid: Widescreen PC 3-Cols + Sidebar (Natural Flow on Mobile) -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-2.5 sm:gap-3 items-start">
       
-      <!-- Skills Matrix (Left 3 Columns on PC, 2-Cols Grid on Mobile) -->
+      <!-- Skills Matrix (Left 3 Columns on PC) -->
       <main class="lg:col-span-3 flex flex-col gap-2.5 sm:gap-3">
         
-        <!-- Tier 1 Section -->
+        <!-- Tier 1 Section (2-cols on mobile, 3-cols on widescreen) -->
         <section class="card-glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 flex flex-col gap-2">
           <div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5 sm:pb-2">
             <div class="flex items-center gap-1.5 sm:gap-2">
@@ -106,7 +106,7 @@
           <div id="tier-1-grid" class="grid grid-cols-2 xl:grid-cols-3 gap-1.5 sm:gap-2.5"></div>
         </section>
 
-        <!-- Tier 2 Section -->
+        <!-- Tier 2 Section (2-cols on mobile, 3-cols on widescreen) -->
         <section class="card-glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 flex flex-col gap-2">
           <div class="flex flex-col gap-1 sm:gap-1.5 border-b border-slate-800/80 pb-1.5 sm:pb-2">
             <div class="flex items-center justify-between">
@@ -123,7 +123,7 @@
           <div id="tier-2-grid" class="grid grid-cols-2 xl:grid-cols-3 gap-1.5 sm:gap-2.5"></div>
         </section>
 
-        <!-- Tier 3 Section -->
+        <!-- Tier 3 Section (2-cols on mobile, 3-cols on widescreen) -->
         <section class="card-glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 flex flex-col gap-2">
           <div class="flex flex-col gap-1 sm:gap-1.5 border-b border-slate-800/80 pb-1.5 sm:pb-2">
             <div class="flex items-center justify-between">
@@ -131,7 +131,7 @@
                 <span class="px-1.5 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-[8px] sm:text-[9px] font-pixel text-purple-400">TIER 3</span>
                 <span class="text-[11px] sm:text-xs font-semibold text-slate-300">Master Apex Skills</span>
               </div>
-              <span id="tier-3-status" class="text-[8px] sm:text-[9px] font-pixel text-slate-400">0/7 REQ</span>
+              <span id="tier-3-status" class="text-[8px] font-pixel text-slate-400">0/7 REQ</span>
             </div>
             <div class="w-full h-1 sm:h-1.5 rounded-full bg-slate-900 overflow-hidden">
               <div id="tier-3-progress" class="h-full bg-gradient-to-r from-purple-500 to-purple-300 transition-all duration-200" style="width: 0%;"></div>
@@ -150,7 +150,7 @@
             <span class="text-amber-400 text-xs">⚡</span>
           </div>
 
-          <!-- Points & Shards -->
+          <!-- Tab Investment -->
           <div class="grid grid-cols-2 gap-2 mb-2">
             <div class="card-sub p-2 rounded-xl text-center">
               <div class="text-[8px] text-slate-500 font-bold uppercase">Points</div>
@@ -205,77 +205,83 @@
     </div>
   </div>
 
-  <!-- Mobile Floating Summary Action Button (FAB) -->
+  <!-- Mobile Floating Action Button (FAB) on Bottom-Right -->
   <button 
     type="button" 
-    onclick="openSummaryDrawer()" 
-    class="lg:hidden fixed bottom-4 right-4 z-40 btn-primary px-3.5 py-2.5 rounded-full flex items-center gap-2 shadow-[0_8px_25px_rgba(245,158,11,0.4)] cursor-pointer active:scale-95 transition-all"
+    onclick="openSummaryModal()" 
+    class="lg:hidden fixed bottom-4 right-4 z-40 btn-primary px-3.5 py-2.5 rounded-full flex items-center gap-2 shadow-[0_8px_25px_rgba(245,158,11,0.4)] text-slate-950 font-display font-bold text-xs cursor-pointer active:scale-95"
   >
     <span class="text-sm">📊</span>
-    <span class="font-display font-bold text-xs text-slate-950">Summary</span>
-    <span id="fab-pts-badge" class="px-1.5 py-0.2 rounded-full bg-slate-950 text-amber-300 text-[9px] font-pixel">0p</span>
+    <span>Summary</span>
+    <span id="fab-tab-pts" class="px-1.5 py-0.2 rounded-full bg-black/20 text-[9px] font-pixel">0p</span>
   </button>
 
-  <!-- Slide-Up Mobile Summary Drawer -->
-  <div id="drawer-backdrop" onclick="closeSummaryDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden lg:hidden"></div>
-  <div id="summary-drawer" class="fixed bottom-0 inset-x-0 z-50 bg-slate-900 border-t border-slate-700 rounded-t-2xl p-4 max-w-lg mx-auto flex flex-col gap-3 max-h-[82vh] lg:hidden">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-      <div class="flex items-center gap-2">
-        <span class="text-amber-400">⚡</span>
-        <h3 class="font-display font-bold text-xs text-white uppercase tracking-wide">Tab Summary</h3>
+  <!-- Mobile Summary Popup Modal -->
+  <div id="summary-modal" onclick="onSummaryBackdropClick(event)" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 p-3 sm:p-4 flex items-center justify-center lg:hidden" style="display: none;">
+    <div class="max-w-md w-full my-auto card-glass border border-slate-700/80 rounded-2xl p-4 shadow-2xl flex flex-col gap-3">
+      
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 text-base">⚡</span>
+          <h2 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-display" id="modal-summary-title">Tab Summary</h2>
+        </div>
+        <button type="button" onclick="closeSummaryModal()" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs flex items-center justify-center cursor-pointer">✕</button>
       </div>
-      <button type="button" onclick="closeSummaryDrawer()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 text-xs flex items-center justify-center cursor-pointer">✕</button>
-    </div>
 
-    <!-- Points & Shards -->
-    <div class="grid grid-cols-2 gap-2">
-      <div class="card-sub p-2 rounded-xl text-center">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">Tab Points</div>
-        <div id="m-tab-summary-points" class="font-display font-bold text-sm text-amber-400">0</div>
+      <!-- Tab Investment -->
+      <div class="grid grid-cols-2 gap-2">
+        <div class="card-sub p-2 rounded-xl text-center">
+          <div class="text-[8px] text-slate-500 font-bold uppercase">Points In Tab</div>
+          <div id="modal-summary-points" class="font-display font-bold text-sm text-amber-400">0</div>
+        </div>
+        <div class="card-sub p-2 rounded-xl text-center border-cyan-500/20">
+          <div class="text-[8px] text-cyan-400 font-bold uppercase">🔷 Shards</div>
+          <div id="modal-summary-shards" class="font-display font-bold text-sm text-cyan-300">0</div>
+        </div>
       </div>
-      <div class="card-sub p-2 rounded-xl text-center border-cyan-500/20">
-        <div class="text-[8px] text-cyan-400 font-bold uppercase">🔷 Tab Shards</div>
-        <div id="m-tab-summary-shards" class="font-display font-bold text-sm text-cyan-300">0</div>
-      </div>
-    </div>
 
-    <!-- Tier Breakdown -->
-    <div class="grid grid-cols-3 gap-1.5 text-center">
-      <div class="card-sub p-1.5 rounded-lg">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">T1</div>
-        <div id="m-summary-t1" class="font-display font-bold text-xs text-emerald-400">0p</div>
+      <!-- Tier Breakdown -->
+      <div class="grid grid-cols-3 gap-1.5">
+        <div class="card-sub p-1.5 rounded-lg text-center">
+          <div class="text-[8px] text-slate-500 font-bold uppercase">T1</div>
+          <div id="modal-summary-t1" class="font-display font-bold text-xs text-emerald-400">0p</div>
+        </div>
+        <div class="card-sub p-1.5 rounded-lg text-center">
+          <div class="text-[8px] text-slate-500 font-bold uppercase">T2</div>
+          <div id="modal-summary-t2" class="font-display font-bold text-xs text-amber-400">0p</div>
+        </div>
+        <div class="card-sub p-1.5 rounded-lg text-center">
+          <div class="text-[8px] text-slate-500 font-bold uppercase">T3</div>
+          <div id="modal-summary-t3" class="font-display font-bold text-xs text-purple-400">0p</div>
+        </div>
       </div>
-      <div class="card-sub p-1.5 rounded-lg">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">T2</div>
-        <div id="m-summary-t2" class="font-display font-bold text-xs text-amber-400">0p</div>
+
+      <!-- Active Buffs -->
+      <div class="space-y-1">
+        <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active Buffs
+        </span>
+        <div id="modal-buffs-list" class="max-h-36 overflow-y-auto space-y-1 pr-0.5 text-xs"></div>
       </div>
-      <div class="card-sub p-1.5 rounded-lg">
-        <div class="text-[8px] text-slate-500 font-bold uppercase">T3</div>
-        <div id="m-summary-t3" class="font-display font-bold text-xs text-purple-400">0p</div>
+
+      <!-- Active Debuffs -->
+      <div class="space-y-1">
+        <span class="text-[9px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Tradeoffs
+        </span>
+        <div id="modal-debuffs-list" class="max-h-28 overflow-y-auto space-y-1 pr-0.5 text-xs"></div>
       </div>
-    </div>
 
-    <!-- Active Buffs -->
-    <div class="space-y-1">
-      <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider block">▲ Active Buffs</span>
-      <div id="m-buffs-list" class="space-y-1 max-h-36 overflow-y-auto pr-0.5 text-xs"></div>
-    </div>
+      <div class="pt-2 border-t border-slate-800/80">
+        <button type="button" onclick="exportBuildLink(); closeSummaryModal();" class="btn-primary w-full py-2.5 rounded-xl text-slate-950 font-display font-bold text-xs cursor-pointer shadow-lg">
+          Copy Build Link
+        </button>
+      </div>
 
-    <!-- Active Debuffs -->
-    <div class="space-y-1">
-      <span class="text-[9px] font-bold text-rose-400 uppercase tracking-wider block">▼ Tradeoffs</span>
-      <div id="m-debuffs-list" class="space-y-1 max-h-24 overflow-y-auto pr-0.5 text-xs"></div>
-    </div>
-
-    <!-- Copy Build Link Action -->
-    <div class="pt-2 border-t border-slate-800">
-      <button type="button" onclick="exportBuildLink()" class="btn-primary w-full py-2.5 rounded-xl text-slate-950 font-display font-bold text-xs cursor-pointer shadow-lg">
-        Copy Build Link
-      </button>
     </div>
   </div>
 
-  <!-- Multi-Tab Presets Modal -->
+  <!-- Presets Modal -->
   <div id="suggestions-modal" onclick="onModalBackdropClick(event)" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 p-2.5 sm:p-4" style="display: none;">
     <div class="max-w-xl w-full mx-auto my-auto card-glass border border-slate-700/80 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col gap-2.5 sm:gap-3">
       <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
@@ -295,7 +301,7 @@
   </div>
 
   <!-- Floating Toast -->
-  <div id="toast-notification" class="fixed top-4 inset-x-0 mx-auto w-fit z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold">
+  <div id="toast-notification" class="fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold">
     <span>✓</span>
     <span id="toast-text">Build copied!</span>
   </div>
