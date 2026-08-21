@@ -114,7 +114,7 @@ const SUGGESTIONS_DATABASE = {
         "nom_nom",
         "munching_mastery",
         "fast_feasts",
-        "drive-through_deli",
+        "drive_through_deli",
         "fiery_jackpot"
       ]
     }
