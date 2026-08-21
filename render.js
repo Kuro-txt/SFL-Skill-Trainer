@@ -92,15 +92,23 @@ function renderSummary() {
   const catInv = getCategoryInvestments(currentCategoryKey);
   const globalInv = getTotalGlobalInvestments();
 
-  // Top Bar Counters
+  // Top Bar Counters & Mobile FAB Badge
   document.getElementById('hud-total-points').innerText = `${globalInv.points} pts`;
   document.getElementById('hud-total-shards').innerText = `${globalInv.shards}`;
+  const fabBadge = document.getElementById('fab-pts-badge');
+  if (fabBadge) fabBadge.innerText = `${catInv.totalPoints}p`;
 
-  // Tab Summary
-  document.getElementById('tab-summary-points').innerText = catInv.totalPoints;
-  document.getElementById('tab-summary-shards').innerText = catInv.totalShards;
+  // Desktop + Mobile Drawer Investment Counters
+  ['tab-summary-points', 'm-tab-summary-points'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = catInv.totalPoints;
+  });
+  ['tab-summary-shards', 'm-tab-summary-shards'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = catInv.totalShards;
+  });
 
-  // Status Headers & Bars
+  // Status Headers & Progress Bars
   document.getElementById('tier-1-status').innerText = `${catInv.t1} PTS`;
 
   const t2Unlocked = catInv.totalPoints >= cat.reqs.t2;
@@ -111,9 +119,10 @@ function renderSummary() {
   document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${catInv.t3}/${cat.reqs.t3})`;
   document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / cat.reqs.t3) * 100))}%`;
 
-  document.getElementById('summary-t1').innerText = `${catInv.t1}p`;
-  document.getElementById('summary-t2').innerText = `${catInv.t2}p`;
-  document.getElementById('summary-t3').innerText = `${catInv.t3}p`;
+  // Desktop + Mobile Tier Summary
+  ['summary-t1', 'm-summary-t1'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t1}p`; });
+  ['summary-t2', 'm-summary-t2'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t2}p`; });
+  ['summary-t3', 'm-summary-t3'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t3}p`; });
 
   let buffs = [];
   let debuffs = [];
@@ -126,8 +135,7 @@ function renderSummary() {
     }
   });
 
-  const buffsEl = document.getElementById('buffs-list');
-  buffsEl.innerHTML = buffs.length === 0 
+  const buffsHTML = buffs.length === 0 
     ? `<div class="text-[11px] text-slate-500 italic p-2 rounded-lg card-sub">No ${cat.name} buffs active</div>`
     : buffs.map(b => `
         <div class="p-1.5 sm:p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-between gap-1 text-[11px]">
@@ -136,8 +144,7 @@ function renderSummary() {
         </div>
       `).join('');
 
-  const debuffsEl = document.getElementById('debuffs-list');
-  debuffsEl.innerHTML = debuffs.length === 0 
+  const debuffsHTML = debuffs.length === 0 
     ? `<div class="text-[11px] text-slate-500 italic p-2 rounded-lg card-sub">No ${cat.name} tradeoffs</div>`
     : debuffs.map(d => `
         <div class="p-1.5 sm:p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-center justify-between gap-1 text-[11px]">
@@ -145,6 +152,9 @@ function renderSummary() {
           <span class="text-[8px] font-pixel px-1 py-0.2 rounded bg-rose-400/20 text-rose-300">R${d.rank}</span>
         </div>
       `).join('');
+
+  ['buffs-list', 'm-buffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = buffsHTML; });
+  ['debuffs-list', 'm-debuffs-list'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = debuffsHTML; });
 }
 
 function render() {
@@ -155,14 +165,25 @@ function render() {
   renderSummary();
 }
 
+// Mobile Summary Drawer Open/Close Handlers
+function openSummaryDrawer() {
+  document.getElementById('drawer-backdrop').classList.remove('hidden');
+  document.getElementById('summary-drawer').classList.add('drawer-open');
+}
+
+function closeSummaryDrawer() {
+  document.getElementById('drawer-backdrop').classList.add('hidden');
+  document.getElementById('summary-drawer').classList.remove('drawer-open');
+}
+
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast-notification");
   document.getElementById("toast-text").innerText = message;
   
   if (type === "error") {
-    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed top-4 inset-x-0 mx-auto w-fit z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-rose-500/40 text-rose-300 shadow-2xl text-xs font-semibold toast-active";
   } else {
-    toast.className = "fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
+    toast.className = "fixed top-4 inset-x-0 mx-auto w-fit z-50 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 shadow-2xl text-xs font-semibold toast-active";
   }
 
   setTimeout(() => { toast.classList.remove("toast-active"); }, 2200);
