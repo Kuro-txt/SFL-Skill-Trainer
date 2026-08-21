@@ -113,16 +113,34 @@ function renderSummary() {
   const modalTitle = document.getElementById('modal-summary-title');
   if (modalTitle) modalTitle.innerText = `${cat.name} Summary`;
 
-  // Status Headers & Progress Bars
+  // Status Headers & Accurate Unlock Verification
   document.getElementById('tier-1-status').innerText = `${catInv.t1} PTS`;
 
-  const t2Unlocked = catInv.totalPoints >= cat.reqs.t2;
-  document.getElementById('tier-2-status').innerText = `${t2Unlocked ? 'UNLOCKED' : 'LOCKED'} (${catInv.t2}/${cat.reqs.t2})`;
-  document.getElementById('tier-2-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / cat.reqs.t2) * 100))}%`;
+  // Tier 2 Lock/Unlock status
+  const t2Req = cat.reqs.t2;
+  const t2Unlocked = catInv.totalPoints >= t2Req;
+  const t2StatusEl = document.getElementById('tier-2-status');
+  if (t2Unlocked) {
+    t2StatusEl.innerText = `UNLOCKED (${catInv.t2} PTS)`;
+    t2StatusEl.className = "text-[8px] sm:text-[9px] font-pixel text-amber-400";
+  } else {
+    t2StatusEl.innerText = `LOCKED (${catInv.totalPoints}/${t2Req} PTS)`;
+    t2StatusEl.className = "text-[8px] sm:text-[9px] font-pixel text-slate-400";
+  }
+  document.getElementById('tier-2-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / t2Req) * 100))}%`;
 
-  const t3Unlocked = catInv.totalPoints >= cat.reqs.t3;
-  document.getElementById('tier-3-status').innerText = `${t3Unlocked ? 'UNLOCKED' : 'LOCKED'} (${catInv.t3}/${cat.reqs.t3})`;
-  document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / cat.reqs.t3) * 100))}%`;
+  // Tier 3 Lock/Unlock status
+  const t3Req = cat.reqs.t3;
+  const t3Unlocked = catInv.totalPoints >= t3Req;
+  const t3StatusEl = document.getElementById('tier-3-status');
+  if (t3Unlocked) {
+    t3StatusEl.innerText = `UNLOCKED (${catInv.t3} PTS)`;
+    t3StatusEl.className = "text-[8px] sm:text-[9px] font-pixel text-purple-400";
+  } else {
+    t3StatusEl.innerText = `LOCKED (${catInv.totalPoints}/${t3Req} PTS)`;
+    t3StatusEl.className = "text-[8px] sm:text-[9px] font-pixel text-slate-400";
+  }
+  document.getElementById('tier-3-progress').style.width = `${Math.min(100, Math.round((catInv.totalPoints / t3Req) * 100))}%`;
 
   // Tier Breakdown (Sidebar + Modal)
   ['summary-t1', 'modal-summary-t1'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = `${catInv.t1}p`; });
