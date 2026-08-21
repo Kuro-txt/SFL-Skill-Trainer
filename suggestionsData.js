@@ -104,10 +104,11 @@ const SUGGESTIONS_DATABASE = {
   ],
   bees_flowers: [
     {
-      id: "flower_power",
-      title: "Flower Power",
-      description: "Focused on flower yield, mutations, petal boosts, and bee synergy.",
+      id: "flower_power_build",
+      title: "Flower Bloom & Yield",
+      description: "Focused on flowers yield and stuff.",
       skills: [
+        "flower_power",
         "hyper_bees",
         "petal_blessed",
         "petalled_perk",
