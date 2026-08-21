@@ -1,5 +1,39 @@
+const BUILD_STORAGE_KEY = "sfl_skill_ranks";
+const TAB_STORAGE_KEY = "sfl_active_tab";
+
 let currentCategoryKey = "crops";
 let skillRanks = {};
+
+// Auto-persists active build & tab to local storage
+function saveStateToLocalStorage() {
+  try {
+    localStorage.setItem(BUILD_STORAGE_KEY, JSON.stringify(skillRanks));
+    localStorage.setItem(TAB_STORAGE_KEY, currentCategoryKey);
+  } catch (e) {
+    console.error("Failed to save state to localStorage", e);
+  }
+}
+
+// Loads saved build & tab from local storage
+function loadStateFromLocalStorage() {
+  try {
+    const savedTab = localStorage.getItem(TAB_STORAGE_KEY);
+    if (savedTab && SKILL_DATABASE[savedTab]) {
+      currentCategoryKey = savedTab;
+    }
+
+    const savedRanks = localStorage.getItem(BUILD_STORAGE_KEY);
+    if (savedRanks) {
+      const parsed = JSON.parse(savedRanks);
+      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
+        skillRanks = parsed;
+        Object.keys(SKILL_DATABASE).forEach(validateTierRequirements);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to load state from localStorage", e);
+  }
+}
 
 function toggleSkillCard(skillId) {
   const cat = SKILL_DATABASE[currentCategoryKey];
@@ -18,6 +52,7 @@ function toggleSkillCard(skillId) {
     skillRanks[skillId] = 1;
   }
 
+  saveStateToLocalStorage();
   render();
 }
 
@@ -37,6 +72,7 @@ function upgradeSkill(skillId, event) {
   }
 
   skillRanks[skillId] = currentRank + 1;
+  saveStateToLocalStorage();
   render();
 }
 
@@ -52,24 +88,28 @@ function downgradeSkill(skillId, event) {
   }
 
   validateTierRequirements(currentCategoryKey);
+  saveStateToLocalStorage();
   render();
 }
 
 function resetCurrentCategory() {
   const cat = SKILL_DATABASE[currentCategoryKey];
   cat.skills.forEach(s => delete skillRanks[s.id]);
+  saveStateToLocalStorage();
   showToast(`Reset ${cat.name}`);
   render();
 }
 
 function resetAllSkills() {
   skillRanks = {};
+  saveStateToLocalStorage();
   showToast("All points & shards reset");
   render();
 }
 
 function setCategory(key) {
   currentCategoryKey = key;
+  saveStateToLocalStorage();
   render();
 }
 
@@ -86,18 +126,18 @@ function applyPreset(presetId, categoryKey) {
   validateTierRequirements(targetCategory);
   currentCategoryKey = targetCategory;
 
+  saveStateToLocalStorage();
   closeSuggestionsModal();
   showToast(`Applied ${preset.title}`);
   render();
 }
 
-// --- Short Link Generation Engine ---
+// Short Link Generation Engine
 function exportBuildLink(tabOnly = false) {
   const targetSkills = tabOnly 
     ? SKILL_DATABASE[currentCategoryKey].skills.map(s => s.id) 
     : Object.keys(skillRanks);
 
-  // Short format: "c01.2_m04.1" (shortCode.rank)
   const encodedParts = [];
   targetSkills.forEach(skillId => {
     const rank = skillRanks[skillId];
@@ -142,10 +182,13 @@ function loadBuildFromURL() {
         }
       });
       Object.keys(SKILL_DATABASE).forEach(validateTierRequirements);
+      saveStateToLocalStorage();
+      return true; // Overrode with URL build
     } catch (e) {
       console.error("Failed to parse short build string", e);
     }
   }
+  return false;
 }
 
 // Modal Handlers
@@ -166,7 +209,10 @@ function onShareBackdropClick(event) {
   if (event.target.id === "share-modal") closeShareModal();
 }
 
-// Boot
+// Priority Boot: URL params take precedence over LocalStorage
 loadSavedFarmId();
-loadBuildFromURL();
+const hasUrlBuild = loadBuildFromURL();
+if (!hasUrlBuild) {
+  loadStateFromLocalStorage();
+}
 render();
