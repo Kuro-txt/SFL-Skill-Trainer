@@ -81,7 +81,7 @@ const SUGGESTIONS_DATABASE = {
       skills: [
         "iron_bumpkin",
         "tap_prospector",
-        "forge-ward_profits",
+        "forge_ward_profits",
         "frugal_miner",
         "iron_hustle",
         "ferrous_favor"
@@ -102,6 +102,36 @@ const SUGGESTIONS_DATABASE = {
       ]
     }
   ],
+  animals: [
+    {
+      id: "chicken_master",
+      title: "Chicken Master",
+      description: "Maximizes egg production speed, feed efficiency, and incubator yield bonuses.",
+      skills: [
+        "efficient_feeding",
+        "restless_animals",
+        "fine_fibers",
+        "abundant_harvest",
+        "healthy_livestock",
+        "clucky_grazing"
+      ]
+    },
+    {
+      id: "you_mooin",
+      title: "You Moo'in",
+      description: "Focused on cows, leather yields, milk churn turnaround, and barnyard capacity.",
+      skills: [
+        "efficient_feeding",
+        "fine_fibers",
+        "double_bale",
+        "bale_economy",
+        "abundant_harvest",
+        "healthy_livestock",
+        "cow_smart_nutrition",
+        "leathercraft_mastery"
+      ]
+    }
+  ],
   bees_flowers: [
     {
       id: "flower_power_build",
@@ -114,39 +144,6 @@ const SUGGESTIONS_DATABASE = {
         "petalled_perk",
         "blooming_boost",
         "blossom_bonding"
-      ]
-    }
-  ],
-  animals: [
-    {
-      id: "chicken_master",
-      title: "Chicken Master",
-      description: "Maximizes egg production speed, feed efficiency, and incubator yield bonuses.",
-      skills: [
-        "cluck_collect",
-        "feather_farm",
-        "egg_cellent",
-        "coop_clever",
-        "rooster_rule",
-        "poultry_perfection",
-        "barnyard_bliss"
-      ]
-    },
-    {
-      id: "you_mooin",
-      title: "You Moo'in",
-      description: "Focused on cows, leather yields, milk churn turnaround, and barnyard capacity.",
-      skills: [
-        "cluck_collect",
-        "feather_farm",
-        "egg_cellent",
-        "coop_clever",
-        "bovine_blessing",
-        "milk_maid",
-        "rooster_rule",
-        "poultry_perfection",
-        "leather_lover",
-        "barnyard_bliss"
       ]
     }
   ],
