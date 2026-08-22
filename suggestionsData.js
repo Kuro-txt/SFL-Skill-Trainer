@@ -110,6 +110,7 @@ const SUGGESTIONS_DATABASE = {
       skills: [
         "efficient_feeding",
         "restless_animals",
+        "double_bale",
         "fine_fibers",
         "abundant_harvest",
         "healthy_livestock",
