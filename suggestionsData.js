@@ -114,6 +114,7 @@ const SUGGESTIONS_DATABASE = {
         "fine_fibers",
         "abundant_harvest",
         "healthy_livestock",
+        "chonky_feed"
         "clucky_grazing"
       ]
     },
