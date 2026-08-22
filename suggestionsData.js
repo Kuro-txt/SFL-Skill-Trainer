@@ -153,6 +153,20 @@ const SUGGESTIONS_DATABASE = {
   compost: [],
   aging: [],
   fruit_patch: [],
-  greenhouse: [],
+  greenhouse: [
+    {
+      id: "vineyard_mogul",
+      title: "Vineyard Mogul",
+      description: "Dedicated grape rotation build designed for max yield & speed. Only recommended if you own all Grape SFTs.",
+      skills: [
+        "glass_room",
+        "seedy_business",
+        "rice_and_shine",
+        "vine_velocity",
+        "greenhouse_gamble",
+        "slick_saver"
+      ]
+    }
+  ],
   machinery: []
 };
