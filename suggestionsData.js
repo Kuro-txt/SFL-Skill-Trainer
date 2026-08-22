@@ -117,10 +117,42 @@ const SUGGESTIONS_DATABASE = {
       ]
     }
   ],
+  animals: [
+    {
+      id: "chicken_master",
+      title: "Chicken Master",
+      description: "Maximizes egg production speed, feed efficiency, and incubator yield bonuses.",
+      skills: [
+        "cluck_collect",
+        "feather_farm",
+        "egg_cellent",
+        "coop_clever",
+        "rooster_rule",
+        "poultry_perfection",
+        "barnyard_bliss"
+      ]
+    },
+    {
+      id: "you_mooin",
+      title: "You Moo'in",
+      description: "Focused on cows, leather yields, milk churn turnaround, and barnyard capacity.",
+      skills: [
+        "cluck_collect",
+        "feather_farm",
+        "egg_cellent",
+        "coop_clever",
+        "bovine_blessing",
+        "milk_maid",
+        "rooster_rule",
+        "poultry_perfection",
+        "leather_lover",
+        "barnyard_bliss"
+      ]
+    }
+  ],
   compost: [],
   aging: [],
   fruit_patch: [],
-  animals: [],
   greenhouse: [],
   machinery: []
 };
